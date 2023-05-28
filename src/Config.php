@@ -12,8 +12,6 @@ class Config
 {
     public string $theme;
 
-    public string $filename;
-
     public string $title;
 
     public string $author;
@@ -37,7 +35,6 @@ class Config
             throw new TypesetterConfigException('Missing theme.html: ' . Storage::disk('theme')->path($this->theme . '/theme.html'));
         }
 
-        $this->filename = Arr::get($config, 'filename', 'TypesetBook.pdf');
         $this->title = Arr::get($config, 'title', 'My Typeset Book');
         $this->author = Arr::get($config, 'author', 'Joey Bubblegum');
 
