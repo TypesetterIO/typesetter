@@ -8,14 +8,28 @@
         "php": "^8.1",
         "league/commonmark": "^2.4",
         "mpdf/mpdf": "^8.1",
-        "spatie/commonmark-highlighter": "^3.0"
+        "spatie/commonmark-highlighter": "^3.0",
+        "illuminate/support": "^10.12",
+        "illuminate/filesystem": "^10.12",
+        "illuminate/collections": "^10.12"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "squizlabs/php_codesniffer": "^3.7",
         "slevomat/coding-standard": "^8.12",
-        "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^10.1"
+        "phpunit/phpunit": "^10.1",
+        "nunomaduro/larastan": "^2.6",
+        "orchestra/testbench": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Typesetterio\\Typesetter\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "config": {
         "allow-plugins": {
@@ -29,7 +43,7 @@
     },
     "scripts-descriptions": {
         "phpcs": "Run PHP Code Sniffer",
-        "phpstan": "Run PHPStan",
+        "phpstan": "Run PHPStan (with Larastan extension)",
         "test": "Run the PHPUnit tests"
     },
     "minimum-stability": "stable",
