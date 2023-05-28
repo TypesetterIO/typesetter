@@ -41,7 +41,7 @@ return [
 
     'markdown-extensions' => ['md', 'markdown'],
     'observers' => [
-        new \Typesetterio\TypesetterCLI\Observers\DefaultMarkdownConfiguration(),
+        new \Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration(),
         new \Typesetterio\TypesetterCLI\Observers\FirstElementInChapterCSSClass(),
         new \Typesetterio\TypesetterCLI\Observers\BreakToPageBreak(),
     ],
@@ -68,7 +68,7 @@ Observers allow a decorator or visitor style of design pattern to interact with 
 as transparent as possible, some core items of the service are even configured in observers. 
 
 Observers must implement the `Typesetterio\Typesetter\Contracts\Observer` interface.  You may extend the 
-`Typesetterio\Typesetter\Observer` abstract class so you don't have to define every interface method. Then, you can 
+`Typesetterio\Typesetter\Observers\Observer` abstract class so you don't have to define every interface method. Then, you can 
 override only the ones you want.
 
 Observers are ran in the order they are registered.
