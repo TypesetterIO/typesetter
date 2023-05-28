@@ -1,0 +1,37 @@
+{
+    "name": "typesetterio/typesetter",
+    "description": "The main typesetter service for generating PDFs from Markdown for ebooks.",
+    "homepage": "https://typesetter.io",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "league/commonmark": "^2.4",
+        "mpdf/mpdf": "^8.1",
+        "spatie/commonmark-highlighter": "^3.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "squizlabs/php_codesniffer": "^3.7",
+        "slevomat/coding-standard": "^8.12",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "phpcs": "phpcs -s",
+        "phpstan": "phpstan",
+        "test": "phpunit"
+    },
+    "scripts-descriptions": {
+        "phpcs": "Run PHP Code Sniffer",
+        "phpstan": "Run PHPStan",
+        "test": "Run the PHPUnit tests"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
