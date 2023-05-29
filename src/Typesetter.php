@@ -40,6 +40,10 @@ class Typesetter
 
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
+            'margin_left' => 27,
+            'margin_right' => 27,
+            'margin_bottom' => 14,
+            'margin_top' => 14,
         ]);
         $mpdf->SetTitle($bookConfig->title);
         $mpdf->SetAuthor($bookConfig->author);
