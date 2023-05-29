@@ -78,6 +78,13 @@ Available observer methods available are the following:
 | `initializedMarkdownEnvironment` | After the Commonmark Environment has been initialized, this will allow customization of it. | `League\CommonMark\Environment\Environment` that you can add extensions or renders. |
 | `parsed` | After a chapter's markdown has been parsed into HTML and set into a Chapter. The chapter makes methods available to understand the context and modify the HTML. Note that the abstract observer class offers a `getDomDocument()` method that accepts a Chapter and returns a DomDocument. Then you can modify or parse content easier if you'd like. | `Typesetterio\Typesetter\Chapter` |
 
+The following Observers are available for you. They should all be prefixed by `Typestetterio\Typesetter\Observers`:
+
+| Class | Definition | Parameters |
+| ----- | ---------- | ---------- |
+| `BreakToPageBreak` | Puts a page break after the template tag `{BREAK}` | The template to use - defaults to `{BREAK}` |
+| `FirstElementInChapterCSSClass` | Puts a css class of `chapter-beginning` on the first element of every chapter except the first. | The class (defaults to `chapter-beginning`) and a boolean whether to skip the first chapter (default is `true`) |
+
 ### Chapter
 
 The `Typesetterio\Typesetter\Chapter` class contains the content of your markdown for that specific chapter.
