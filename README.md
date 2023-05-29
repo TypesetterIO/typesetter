@@ -149,11 +149,9 @@ To see the list of fonts that are available, see the [MPDF Fonts Directory](http
 
 The content folder holds the content that is coupled with your config to create the PDF.
 
-@todo
-
 ### Cover
 
-There are three options for a cover.
+There are three options for a cover.  The image or the html file should be in the content folder.
 
 First, you can generate a cover image.  The file should be named `cover.jpg`.  The default configuration for MPDF is 96dpi.  The default page is a A4.  This means a standard
 resolution that fits that is 794 x 1123 (96dpi).  You may experiment with different values for larger resolution displays. Remember, the
