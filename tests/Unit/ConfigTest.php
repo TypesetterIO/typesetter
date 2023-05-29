@@ -19,6 +19,16 @@ class ConfigTest extends TestCase
         $config = new Config(['theme' => './not-found']);
     }
 
+    public function testMissingContentDirectoryThrowsException(): void
+    {
+        $this->expectException(TypesetterConfigException::class);
+        $this->expectExceptionMessage('Unable to find a readable content directory: ./not-found');
+
+        chdir(__DIR__ . '/../data/theme');
+
+        $config = new Config(['content' => './not-found']);
+    }
+
     public function testAllDefaultValues(): void
     {
         chdir(__DIR__ . '/../data/theme');
@@ -26,6 +36,7 @@ class ConfigTest extends TestCase
         $config = new Config([]);
 
         self::assertEquals('.', $config->theme);
+        self::assertEquals('.', $config->content);
         self::assertEquals('My Typeset Book', $config->title);
         self::assertEquals('Joey Bubblegum', $config->author);
         self::assertTrue($config->tocEnabled);
@@ -40,6 +51,7 @@ class ConfigTest extends TestCase
     {
         $config = new Config([
             'theme' => __DIR__ . '/../data/another-theme',
+            'content' => __DIR__ . '/../data/content',
             'title' => 'The Title',
             'author' => 'The Author',
             'toc-enabled' => false,
@@ -54,6 +66,7 @@ class ConfigTest extends TestCase
         ]);
 
         self::assertEquals(__DIR__ . '/../data/another-theme', $config->theme);
+        self::assertEquals(__DIR__ . '/../data/content', $config->content);
         self::assertEquals('The Title', $config->title);
         self::assertEquals('The Author', $config->author);
         self::assertFalse($config->tocEnabled);

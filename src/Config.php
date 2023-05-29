@@ -11,6 +11,8 @@ class Config
 {
     public string $theme;
 
+    public string $content;
+
     public string $title;
 
     public string $author;
@@ -33,6 +35,11 @@ class Config
         $themeHtmlFile = $this->theme . '/theme.html';
         if (!is_readable($themeHtmlFile)) {
             throw new TypesetterConfigException('Missing theme.html: ' . $themeHtmlFile);
+        }
+
+        $this->content = Arr::get($config, 'content', '.');
+        if (!is_dir($this->content) || !is_readable($this->content)) {
+            throw new TypesetterConfigException('Unable to find a readable content directory: ' . $this->content);
         }
 
         $this->title = Arr::get($config, 'title', 'My Typeset Book');

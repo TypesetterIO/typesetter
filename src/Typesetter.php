@@ -45,14 +45,14 @@ class Typesetter
         $this->dispatch(new Events\PDFInitialized());
 
         $stylesheet = $bookConfig->theme . '/theme.html';
-        $mpdf->WriteHTML(Storage::disk('theme')->get($stylesheet));
+        $mpdf->WriteHTML(file_get_contents($stylesheet));
         $this->dispatch(new Events\ThemeAdded());
 
-        if (Storage::disk('content')->exists('cover.jpg')) {
-            $mpdf->Image(Storage::disk('content')->path('cover.jpg'), 0, 0, 210, 297, 'jpg', '', true, false);
+        if (is_readable('contents/cover.jpg')) {
+            $mpdf->Image(file_get_contents('contents/cover.jpg'), 0, 0, 210, 297, 'jpg', '', true, false);
             $this->dispatch(new Events\CoverImageAdded());
-        } elseif (Storage::disk('content')->exists('cover.html')) {
-            $mpdf->WriteHTML(Storage::disk('content')->path('cover.html'));
+        } elseif (is_readable('contents/cover.html')) {
+            $mpdf->WriteHTML(file_get_contents('contents/cover.html'));
             $this->dispatch(new Events\CoverHtmlAdded());
         } else {
             $coverHtml = '<section style="text-align: center; page-break-after:always; padding-top: 100pt"><h1>%s</h1><h2>%s</h2></section>';
@@ -83,7 +83,7 @@ class Typesetter
 
         $this->dispatch(new Events\ContentGenerating());
 
-        $contentFiles = (new Collection(Storage::disk('content')->files()))
+        $contentFiles = (new Collection(scandir($bookConfig->content)))
             ->filter(fn ($contentFile) => in_array(pathinfo($contentFile, PATHINFO_EXTENSION), $bookConfig->markdownExtensions, true));
 
         $totalChapters = $contentFiles->count();
@@ -91,7 +91,7 @@ class Typesetter
         foreach ($contentFiles as $contentFile) {
             $chapterNumber++;
 
-            $markdown = Storage::disk('content')->get($contentFile);
+            $markdown = file_get_contents(sprintf('%s/%s', $bookConfig->content, $contentFile));
             $chapter = new Chapter(
                 markdown: $markdown,
                 chapterNumber: $chapterNumber,
