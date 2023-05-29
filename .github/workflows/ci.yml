@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  CI:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,4 +23,4 @@ jobs:
         run: composer install --no-progress --no-ansi --prefer-dist
 
       - name: Run tests
-        run: composer tests
+        run: composer test
