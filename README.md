@@ -4,7 +4,7 @@
 
 # Typesetter
 
-This is the Typesetter main service. This can be used in your own projects directly if you want. You probably want to head over to `typesetter-cli` though.
+This is the Typesetter main service. This can be used in your own projects directly if you want. You probably want to head over to [typesetter-cli](https://github.com/typesetterio/typesetter-cli) though.
 
 ## Install
 
