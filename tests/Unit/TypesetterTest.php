@@ -69,6 +69,8 @@ class TypesetterTest extends TestCase
         $result = $typesetter->generate($config);
 
         self::assertNotEmpty($result); // the best I can try without really digging in
+
+        // perhaps in the future would be nice to do a mock or spy to determine the default observer ran
     }
 
     public function testHtmlCoverWithTocNoTocHeaderWithFooterWithFiles(): void

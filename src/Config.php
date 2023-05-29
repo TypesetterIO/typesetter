@@ -6,6 +6,7 @@ namespace Typesetterio\Typesetter;
 
 use Illuminate\Support\Arr;
 use Typesetterio\Typesetter\Exceptions\TypesetterConfigException;
+use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
 
 class Config
 {
@@ -53,6 +54,8 @@ class Config
 
         $this->markdownExtensions = Arr::get($config, 'markdown-extensions', ['md', 'markdown']);
 
-        $this->observers = new ObserverCollection(Arr::get($config, 'observers', []));
+        $this->observers = new ObserverCollection(Arr::get($config, 'observers', [
+            new DefaultMarkdownConfiguration(),
+        ]));
     }
 }
