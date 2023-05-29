@@ -25,11 +25,12 @@ abstract class Observer implements \Typesetterio\Typesetter\Contracts\Observer
      */
     protected function getDomDocument(Chapter $chapter): DOMDocument
     {
-        $originalDom = new DOMDocument();
-        // not doing html/body non-implied because that causes parsing errors in some contexts
-        $originalDom->loadHTML($chapter->getHtml(), LIBXML_HTML_NODEFDTD);
+        $originalDom = new DOMDocument('1.0', 'UTF-8');
 
-        $resultDom = new DOMDocument();
+        // not doing html/body non-implied because that causes parsing errors in some contexts
+        $originalDom->loadHTML(mb_convert_encoding($chapter->getHtml(), 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD);
+
+        $resultDom = new DOMDocument('1.0', 'UTF-8');
         foreach ($originalDom->getElementsByTagName('body')->item(0)->childNodes as $node) {
             $resultDom->appendChild($resultDom->importNode($node, true));
         }

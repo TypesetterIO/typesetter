@@ -39,12 +39,18 @@
     "scripts": {
         "phpcs": "phpcs -s",
         "phpstan": "phpstan",
-        "test": "phpunit"
+        "test": "phpunit",
+        "ci": [
+            "@phpcs",
+            "@phpstan",
+            "@test"
+        ]
     },
     "scripts-descriptions": {
         "phpcs": "Run PHP Code Sniffer",
         "phpstan": "Run PHPStan (with Larastan extension)",
-        "test": "Run the PHPUnit tests"
+        "test": "Run the PHPUnit tests",
+        "ci": "Run all CI tests"
     },
     "minimum-stability": "stable",
     "prefer-stable": true
