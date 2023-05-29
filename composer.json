@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.1",
         "ext-dom": "*",
+        "ext-libxml": "*",
         "league/commonmark": "^2.4",
         "mpdf/mpdf": "^8.1",
         "spatie/commonmark-highlighter": "^3.0",
