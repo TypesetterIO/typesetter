@@ -1,3 +1,5 @@
+<img src="https://github.com/TypesetterIO/assets/blob/main/logos/v1/logo.png" align="center" height="100">
+
 # Typesetter
 
 This is the Typesetter main service. This can be used in your own projects directly if you want. You probably want to head over to `typesetter-cli` though.
