@@ -1,4 +1,6 @@
-<img src="https://github.com/TypesetterIO/assets/blob/main/logos/v1/logo.png" align="center" height="100">
+<p align="center">
+    <img src="https://github.com/TypesetterIO/assets/blob/main/logos/v1/logo.png" height="100">
+</p>
 
 # Typesetter
 
