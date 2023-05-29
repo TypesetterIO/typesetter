@@ -11,7 +11,6 @@ use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Mpdf\Mpdf;
 use Typesetterio\Typesetter\Contracts\Event;
 use Typesetterio\Typesetter\Exceptions\ListenerInvalidException;
-use Typsetterio\Typesetter\Config;
 
 class Typesetter
 {

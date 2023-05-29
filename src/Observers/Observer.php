@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Typsetterio\Typesetter\Observers;
+namespace Typesetterio\Typesetter\Observers;
 
 use DOMDocument;
 use League\CommonMark\Environment\Environment;

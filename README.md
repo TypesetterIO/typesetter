@@ -6,7 +6,7 @@ This is the Typesetter main service. This can be used in your own projects direc
 
 This requires PHP 8.1 or above.
 
-`composer require typesetterio/typsetter`
+`composer require typesetterio/typesetter`
 
 ## Usage
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Typsetterio\Typesetter\Observers;
+namespace Typesetterio\Typesetter\Observers;
 
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Attributes\AttributesExtension;

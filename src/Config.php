@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Typsetterio\Typesetter;
+namespace Typesetterio\Typesetter;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
