@@ -6,7 +6,6 @@ namespace Typesetterio\Typesetter;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Mpdf\Mpdf;
 use Typesetterio\Typesetter\Contracts\Event;
@@ -46,10 +45,8 @@ class Typesetter
         $this->dispatch(new Events\PDFInitialized());
 
         $stylesheet = $bookConfig->theme . '/theme.html';
-        if (Storage::disk('theme')->exists($stylesheet)) {
-            $mpdf->WriteHTML(Storage::disk('theme')->get($stylesheet));
-            $this->dispatch(new Events\ThemeAdded());
-        }
+        $mpdf->WriteHTML(Storage::disk('theme')->get($stylesheet));
+        $this->dispatch(new Events\ThemeAdded());
 
         if (Storage::disk('content')->exists('cover.jpg')) {
             $mpdf->Image(Storage::disk('content')->path('cover.jpg'), 0, 0, 210, 297, 'jpg', '', true, false);

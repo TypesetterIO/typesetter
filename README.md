@@ -115,7 +115,7 @@ The following events are available (these are all going to be in the `Typesetter
 | `Starting` | When the `generate()` method is first called. |
 | `InitializedMarkdown` | After the markdown environment has been created and all observers have ran on it. |
 | `PDFInitialized` | After the MPDF instance has been created and lightly configured. |
-| `ThemeAdded` | If a theme has been found and applied to the PDF. |
+| `ThemeAdded` | When the theme has been found and applied to the PDF. |
 | `CoverImageAdded` | A cover image has been found in your content and added. |
 | `CoverHtmlAdded` | A cover html file has been found in your content and added. |
 | `CoverGenerated` | Typesetter was unable to find either cover option so it generated one. |
@@ -129,7 +129,11 @@ You may listen to as many or as little events as you want. Remember, some of the
 
 ## Themes
 
-@todo
+Theming support is done with HTML and CSS. The theme folder should contain a `theme.html` which contains a `<style>` declaration
+as if it were in the head of an HTML file. This is where you can customize the theme of your PDF. Remember that you will 
+be working with print styles in CSS so you can use things like page break.
+
+More to come here!
 
 ### Fonts
 
@@ -141,7 +145,7 @@ To see the list of fonts that are available, see the [MPDF Fonts Directory](http
 
 The content folder holds the content that is coupled with your config to create the PDF.
 
-@todo write about disk configuration
+@todo
 
 ### Cover
 
