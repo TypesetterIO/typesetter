@@ -28,7 +28,7 @@ class Config
 
     public ObserverCollection $observers;
 
-    protected function __construct(array $config)
+    public function __construct(array $config)
     {
         $this->theme = Arr::get($config, 'theme', 'default');
         if (Storage::disk('theme')->missing($this->theme . '/theme.html')) {
@@ -47,15 +47,5 @@ class Config
         $this->markdownExtensions = Arr::get($config, 'markdown-extensions', ['md', 'markdown']);
 
         $this->observers = new ObserverCollection(Arr::get($config, 'observers', []));
-    }
-
-    public static function make(string $pathToConfigFile): self
-    {
-        $configFile = Storage::path($pathToConfigFile);
-        if (Storage::missing($pathToConfigFile)) {
-            throw new TypesetterConfigException('Cannot find the config file at: ' . $configFile);
-        }
-
-        return new self(require $configFile);
     }
 }

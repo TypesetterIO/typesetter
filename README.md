@@ -10,25 +10,12 @@ This requires PHP 8.1 or above.
 
 ## Usage
 
-Create a config file and pass that to the config maker. Then create a new instance of the Typesetter class.  Call the generate method with your config to get a PDF binary return from MPDF.
+Create a config array and pass that to the config maker. Then create a new instance of the Typesetter class.  Call the generate method with your config to get a PDF binary return from MPDF.
 
 Example:
 
 ```php
-$config = \Typsetterio\Typesetter\Config::make('config.php');
-$service = new \Typesetterio\Typesetter\Typesetter();
-$pdfContent = $service->generate($config);
-file_put_contents('my-pdf.pdf', $pdfContent);
-```
-
-### Config File
-
-Here is an example config file:
-
-```php
-<?php
-
-return [
+$config = [
     'title' => 'Benjamin Button',
     'author' => 'F. Scott Fitzgerald',
     'theme' => 'bb',
@@ -46,9 +33,16 @@ return [
         new \Typesetterio\TypesetterCLI\Observers\BreakToPageBreak(),
     ],
 ];
+
+$config = new \Typsetterio\Typesetter\Config($config);
+$service = new \Typesetterio\Typesetter\Typesetter();
+$pdfContent = $service->generate($config);
+file_put_contents('my-pdf.pdf', $pdfContent);
 ```
 
-The config file should return an array.  The details are as follows:
+### Config Array
+
+The details are as follows:
 
 | Option  | Definition | Example |
 |---------| ---------- | ------- |
@@ -136,6 +130,12 @@ You may listen to as many or as little events as you want. Remember, some of the
 ## Themes
 
 @todo
+
+### Fonts
+
+At this time, Typesetter only supports the fonts that MPDF does. It will support font management in the future.
+
+To see the list of fonts that are available, see the [MPDF Fonts Directory](https://github.com/mpdf/mpdf/tree/v8.1.6/ttfonts).
 
 ## Content
 
