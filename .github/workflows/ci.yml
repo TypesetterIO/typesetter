@@ -22,5 +22,11 @@ jobs:
       - name: Composer install
         run: composer install --no-progress --no-ansi --prefer-dist
 
+      - name: PHP CodeSniffer
+        run: composer phpcs
+
+      - name: PHPStan
+        run: composer phpstan
+
       - name: Run tests
         run: composer test
