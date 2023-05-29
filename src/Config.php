@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Typesetterio\Typesetter;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use Typesetterio\Typesetter\Exceptions\TypesetterConfigException;
 
 class Config
@@ -30,9 +29,10 @@ class Config
 
     public function __construct(array $config)
     {
-        $this->theme = Arr::get($config, 'theme', 'default');
-        if (Storage::disk('theme')->missing($this->theme . '/theme.html')) {
-            throw new TypesetterConfigException('Missing theme.html: ' . Storage::disk('theme')->path($this->theme . '/theme.html'));
+        $this->theme = Arr::get($config, 'theme', '.');
+        $themeHtmlFile = $this->theme . '/theme.html';
+        if (!is_readable($themeHtmlFile)) {
+            throw new TypesetterConfigException('Missing theme.html: ' . $themeHtmlFile);
         }
 
         $this->title = Arr::get($config, 'title', 'My Typeset Book');

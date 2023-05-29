@@ -48,7 +48,7 @@ The details are as follows:
 |---------| ---------- | ------- |
 | `title`  | The Title of your book. | `Benjamin Button` |
 | `author` | The author of your book. | `F. Scott Fitzgerald` |
-| `theme` | The theme folder name in your `themes` storage disk. | `bb` |
+| `theme` | The path to the folder which contains your theme info. This should at minimum have a `theme.html` file in it. | `bb` |
 | `toc-enabled` | Should Table of Contents be generated after cover? | `false` |
 | `toc-links` | Should table of Contents link to the headers in your document? | `false` |
 | `toc-header` | What header with `#toc-header` html attribute text? Empty will not generate one. | `Contents` |
