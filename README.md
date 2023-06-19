@@ -2,6 +2,10 @@
     <img src="https://github.com/TypesetterIO/assets/blob/main/logos/v1/logo.png" height="100">
 </p>
 
+![License](https://img.shields.io/github/license/typesetterio/typesetter?labelColor=5a94bd&color=00345c)
+![Packagist Downloads](https://img.shields.io/packagist/dm/typesetterio/typesetter?labelColor=5a94bd&color=00345c)
+![Github Workflow Status](https://img.shields.io/github/actions/workflow/status/typesetterio/typesetter/ci.yml?labelColor=5a94bd&color=00345c)
+
 # Typesetter
 
 This is the Typesetter main service. This can be used in your own projects directly if you want. You probably want to head over to [typesetter-cli](https://github.com/typesetterio/typesetter-cli) though.
