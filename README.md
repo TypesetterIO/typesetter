@@ -39,6 +39,7 @@ $config = [
         new \Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration(),
         new \Typesetterio\TypesetterCLI\Observers\FirstElementInChapterCSSClass(),
         new \Typesetterio\TypesetterCLI\Observers\BreakToPageBreak(),
+        new \Typesetterio\TypesetterCLI\Observers\Credits(),
     ],
 ];
 
