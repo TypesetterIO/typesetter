@@ -21,6 +21,7 @@ class ObserverCollection extends Collection
     public function coverAdded(Mpdf $mpdf): self
     {
         $this->each(fn (Observer $observer) => $observer->coverAdded($mpdf));
+        return $this;
     }
 
     public function parsed(Chapter $chapter): self
