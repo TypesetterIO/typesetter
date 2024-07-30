@@ -66,6 +66,8 @@ class Typesetter
             $this->dispatch(new Events\CoverGenerated());
         }
 
+        $bookConfig->observers->coverAdded($mpdf);
+
         if ($bookConfig->tocEnabled) {
             $tocLevels = ['H1' => 0, 'H2' => 1];
             $mpdf->h2toc = $tocLevels;

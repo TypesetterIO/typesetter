@@ -18,6 +18,10 @@ abstract class Observer implements \Typesetterio\Typesetter\Contracts\Observer
     {
     }
 
+    public function coverAdded(Mpdf $mpdf): void
+    {
+    }
+
     /**
      * Get the DOMDocument for this chapter in the format of an HTML fragment.
      *
