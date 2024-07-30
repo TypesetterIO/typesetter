@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Typesetterio\Typesetter;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Typesetterio\Typesetter\Exceptions\TypesetterConfigException;
 use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
@@ -13,6 +14,8 @@ class Config
     public string $theme;
 
     public string $content;
+
+    public Closure $contentFilter;
 
     public string $title;
 
@@ -42,6 +45,7 @@ class Config
         if (!is_dir($this->content) || !is_readable($this->content)) {
             throw new TypesetterConfigException('Unable to find a readable content directory: ' . $this->content);
         }
+        $this->contentFilter = Arr::get($config, 'contentFilter', fn() => true);
 
         $this->title = Arr::get($config, 'title', 'My Typeset Book');
         $this->author = Arr::get($config, 'author', 'Joey Bubblegum');

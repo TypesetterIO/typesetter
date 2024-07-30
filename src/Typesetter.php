@@ -90,7 +90,8 @@ class Typesetter
         $this->dispatch(new Events\ContentGenerating());
 
         $contentFiles = (new Collection(scandir($bookConfig->content)))
-            ->filter(fn ($contentFile) => in_array(pathinfo($contentFile, PATHINFO_EXTENSION), $bookConfig->markdownExtensions, true));
+            ->filter(fn ($contentFile) => in_array(pathinfo($contentFile, PATHINFO_EXTENSION), $bookConfig->markdownExtensions, true))
+            ->filter($bookConfig->contentFilter);
 
         $totalChapters = $contentFiles->count();
         $chapterNumber = 0;
