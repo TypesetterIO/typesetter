@@ -100,11 +100,10 @@ class Typesetter
 
             $markdown = file_get_contents(sprintf('%s/%s', $bookConfig->content, $contentFile));
             $chapter = new Chapter(
-                markdown: $markdown,
+                markdown: $converter->convert($markdown),
                 chapterNumber: $chapterNumber,
                 totalChapters: $totalChapters
             );
-            $chapter->setHtml($converter->convert($markdown));
 
             $bookConfig->observers->parsed($chapter);
 

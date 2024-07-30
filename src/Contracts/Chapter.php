@@ -17,4 +17,6 @@ interface Chapter
     public function isFirstChapter(): bool;
 
     public function isLastChapter(): bool;
+
+    public function getMetaData(): array;
 }

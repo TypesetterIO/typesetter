@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Typesetterio\Typesetter;
 
+use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
+use League\CommonMark\Output\RenderedContent;
+
 class Chapter implements Contracts\Chapter
 {
     protected string $html;
 
-    public function __construct(protected string $markdown, protected int $chapterNumber, protected int $totalChapters)
+    public function __construct(protected RenderedContent $markdown, protected int $chapterNumber, protected int $totalChapters)
     {
+        $this->setHtml($markdown);
     }
 
     public function getHtml(): string
@@ -40,5 +44,10 @@ class Chapter implements Contracts\Chapter
     public function isLastChapter(): bool
     {
         return $this->chapterNumber === $this->totalChapters;
+    }
+
+    public function getMetaData(): array
+    {
+        return $this->markdown instanceof RenderedContentWithFrontMatter ? $this->markdown->getFrontMatter() : [];
     }
 }
