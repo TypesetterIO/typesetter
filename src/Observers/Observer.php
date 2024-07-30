@@ -6,6 +6,7 @@ namespace Typesetterio\Typesetter\Observers;
 
 use DOMDocument;
 use League\CommonMark\Environment\Environment;
+use Mpdf\Mpdf;
 use Typesetterio\Typesetter\Contracts\Chapter;
 
 abstract class Observer implements \Typesetterio\Typesetter\Contracts\Observer
