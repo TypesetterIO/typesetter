@@ -54,11 +54,11 @@ class Typesetter
         $mpdf->WriteHTML(file_get_contents($stylesheet));
         $this->dispatch(new Events\ThemeAdded());
 
-        if (is_readable($bookConfig->content . '/cover.jpg')) {
-            $mpdf->Image($bookConfig->content . '/cover.jpg', 0, 0, 210, 297, 'jpg', '', true, false);
+        if (is_readable($bookConfig->theme . '/cover.jpg')) {
+            $mpdf->Image($bookConfig->theme . '/cover.jpg', 0, 0, 210, 297, 'jpg', '', true, false);
             $this->dispatch(new Events\CoverImageAdded());
-        } elseif (is_readable($bookConfig->content . '/cover.html')) {
-            $mpdf->WriteHTML(file_get_contents($bookConfig->content . '/cover.html'));
+        } elseif (is_readable($bookConfig->theme . '/cover.html')) {
+            $mpdf->WriteHTML(file_get_contents($bookConfig->theme . '/cover.html'));
             $this->dispatch(new Events\CoverHtmlAdded());
         } else {
             $coverHtml = '<section style="text-align: center; page-break-after:always; padding-top: 100pt"><h1>%s</h1><h2>%s</h2></section>';
