@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Typesetterio\Typesetter;
 
+use FilesystemIterator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Mpdf\Mpdf;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Typesetterio\Typesetter\Contracts\Event;
 use Typesetterio\Typesetter\Exceptions\ListenerInvalidException;
 
@@ -93,9 +96,14 @@ class Typesetter
 
         $this->dispatch(new Events\ContentGenerating());
 
-        $contentFiles = (new Collection(scandir($bookConfig->content)))
-            ->filter(fn ($contentFile) => in_array(pathinfo($contentFile, PATHINFO_EXTENSION), $bookConfig->markdownExtensions, true))
-            ->filter($bookConfig->contentFilter);
+        $contentFiles = (new Collection(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($bookConfig->content, FileSystemIterator::SKIP_DOTS))))
+            ->filter(fn ($file) => in_array($file->getExtension(), $bookConfig->markdownExtensions, true))
+            ->filter($bookConfig->contentFilter)
+            ->unless(
+                empty($bookConfig->contentExtra),
+                fn(Collection $collection) => $collection->concat(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($bookConfig->contentExtra, FileSystemIterator::SKIP_DOTS)))
+            )
+            ->sort();
 
         $totalChapters = $contentFiles->count();
         $chapterNumber = 0;

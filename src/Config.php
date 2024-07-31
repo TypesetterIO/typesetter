@@ -17,6 +17,8 @@ class Config
 
     public Closure $contentFilter;
 
+    public string $contentExtra;
+
     public string $title;
 
     public string $author;
@@ -46,6 +48,8 @@ class Config
             throw new TypesetterConfigException('Unable to find a readable content directory: ' . $this->content);
         }
         $this->contentFilter = Arr::get($config, 'contentFilter', fn() => true);
+
+        $this->contentExtra = Arr::get($config, 'contentExtra', '');
 
         $this->title = Arr::get($config, 'title', 'My Typeset Book');
         $this->author = Arr::get($config, 'author', 'Joey Bubblegum');
