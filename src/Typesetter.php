@@ -96,14 +96,14 @@ class Typesetter
 
         $this->dispatch(new Events\ContentGenerating());
 
-        $contentFiles = (new Collection(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($bookConfig->content, FileSystemIterator::SKIP_DOTS))))
+        $contentFiles = (new Collection(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($bookConfig->content, FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS))))
             ->filter(fn ($file) => in_array($file->getExtension(), $bookConfig->markdownExtensions, true))
             ->filter($bookConfig->contentFilter)
             ->unless(
                 empty($bookConfig->contentExtra),
-                fn(Collection $collection) => $collection->concat(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($bookConfig->contentExtra, FileSystemIterator::SKIP_DOTS)))
+                fn(Collection $collection) => $collection->merge(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($bookConfig->contentExtra, FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS)))
             )
-            ->sort();
+            ->sortKeys();
 
         $totalChapters = $contentFiles->count();
         $chapterNumber = 0;
