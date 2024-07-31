@@ -110,7 +110,7 @@ class Typesetter
         foreach ($contentFiles as $contentFile) {
             $chapterNumber++;
 
-            $markdown = file_get_contents(sprintf('%s/%s', $bookConfig->content, $contentFile));
+            $markdown = file_get_contents($contentFile->getPathname());
             $chapter = new Chapter(
                 markdown: $converter->convert($markdown),
                 chapterNumber: $chapterNumber,
