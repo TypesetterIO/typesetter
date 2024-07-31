@@ -11,6 +11,10 @@ use Typesetterio\Typesetter\Contracts\Chapter;
 
 abstract class Observer implements \Typesetterio\Typesetter\Contracts\Observer
 {
+    public function initializedPdf(Mpdf $mpdf): void
+    {
+    }
+
     public function initializedMarkdownEnvironment(Environment $environment): void
     {
     }

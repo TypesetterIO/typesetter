@@ -48,6 +48,8 @@ class Typesetter
         $mpdf->SetTitle($bookConfig->title);
         $mpdf->SetAuthor($bookConfig->author);
 
+        $bookConfig->observers->initializedPdf($mpdf);
+
         $this->dispatch(new Events\PDFInitialized());
 
         $stylesheet = $bookConfig->theme . '/theme.html';

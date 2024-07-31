@@ -18,6 +18,12 @@ class ObserverCollection extends Collection
         return $this;
     }
 
+    public function initializedPdf(Mpdf $mpdf): self
+    {
+        $this->each(fn (Observer $observer) => $observer->initializedPdf($mpdf));
+        return $this;
+    }
+
     public function coverAdded(Mpdf $mpdf): self
     {
         $this->each(fn (Observer $observer) => $observer->coverAdded($mpdf));

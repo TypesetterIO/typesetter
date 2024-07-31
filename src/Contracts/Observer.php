@@ -13,5 +13,7 @@ interface Observer
 
     public function initializedMarkdownEnvironment(Environment $environment): void;
 
+    public function initializedPdf(Mpdf $mpdf): void;
+
     public function coverAdded(Mpdf $mpdf): void;
 }
