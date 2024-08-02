@@ -47,7 +47,7 @@ class Config
         if (!is_dir($this->content) || !is_readable($this->content)) {
             throw new TypesetterConfigException('Unable to find a readable content directory: ' . $this->content);
         }
-        $this->contentFilter = Arr::get($config, 'contentFilter', fn() => true);
+        $this->contentFilter = Arr::get($config, 'contentFilter', fn() => fn() => true);
 
         $this->contentExtra = Arr::get($config, 'contentExtra', '');
 
