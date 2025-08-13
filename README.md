@@ -38,9 +38,9 @@ $config = [
     'markdown-extensions' => ['md', 'markdown'],
     'observers' => [
         new \Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration(),
-        new \Typesetterio\TypesetterCLI\Observers\FirstElementInChapterCSSClass(),
-        new \Typesetterio\TypesetterCLI\Observers\BreakToPageBreak(),
-        new \Typesetterio\TypesetterCLI\Observers\Credits(),
+        new \Typesetterio\Typesetter\Observers\FirstElementInChapterCSSClass(),
+        new \Typesetterio\Typesetter\Observers\BreakToPageBreak(),
+        new \Typesetterio\Typesetter\Observers\Credits(),
     ],
 ];
 
