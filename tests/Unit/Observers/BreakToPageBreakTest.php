@@ -13,7 +13,7 @@ class BreakToPageBreakTest extends TestCase
 {
     public function testDoesNothingIfNotFound(): void
     {
-        $chapter = new Chapter($this->createMock(RenderedContent::class), 0, 0);
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 0, 0);
         $chapter->setHtml('<p>I am a tag</p><div>Another</div>');
 
         $observer = new BreakToPageBreak();
@@ -23,7 +23,7 @@ class BreakToPageBreakTest extends TestCase
 
     public function testReplacesOnDefault(): void
     {
-        $chapter = new Chapter($this->createMock(RenderedContent::class), 0, 0);
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 0, 0);
         $chapter->setHtml('<p>one</p><p>{BREAK}</p><div>two</div>{BREAK}<p>three</p>');
 
         $observer = new BreakToPageBreak();
@@ -36,7 +36,7 @@ class BreakToPageBreakTest extends TestCase
 
     public function testReplacesWithUpdated(): void
     {
-        $chapter = new Chapter($this->createMock(RenderedContent::class), 0, 0);
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 0, 0);
         $chapter->setHtml('<p>one</p><p>{BREAK}</p><div>two</div>{HONK}<p>three</p>');
 
         $observer = new BreakToPageBreak('{HONK}');

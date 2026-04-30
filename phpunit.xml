@@ -8,6 +8,7 @@
          displayDetailsOnTestsThatTriggerDeprecations="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
          failOnWarning="true"
+         failOnNotice="true"
 >
     <testsuites>
         <testsuite name="Unit">
