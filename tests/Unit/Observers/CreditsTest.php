@@ -13,7 +13,7 @@ class CreditsTest extends TestCase
 {
     public function testNothingHappensWhenNotLastChapter(): void
     {
-        $chapter = new Chapter($this->createMock(RenderedContent::class), 1, 2);
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
         $observer = new Credits();
@@ -24,7 +24,7 @@ class CreditsTest extends TestCase
 
     public function testCreditsAddedToLastPageDefaultClass(): void
     {
-        $chapter = new Chapter($this->createMock(RenderedContent::class), 2, 2);
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
         $observer = new Credits();
@@ -38,7 +38,7 @@ class CreditsTest extends TestCase
 
     public function testCreditsAddedToLastPageSpecifiedClass(): void
     {
-        $chapter = new Chapter($this->createMock(RenderedContent::class), 3, 3);
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 3, 3);
         $chapter->setHtml('<p>a</p><p>b</p>');
 
         $observer = new Credits(class: 'derp');

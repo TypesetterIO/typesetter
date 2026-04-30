@@ -13,18 +13,18 @@ This is the Typesetter main service. This can be used in your own projects direc
 
 ## Install
 
-This requires PHP 8.1 or above.
+This requires PHP 8.3 or above.
 
 `composer require typesetterio/typesetter`
 
 ## Usage
 
-Create a config array and pass that to the config maker. Then create a new instance of the Typesetter class.  Call the generate method with your config to get a PDF binary return from MPDF.
+Build a `Config` from an array of options, then pass it to `Typesetter::generate()` to get a PDF binary back from MPDF.
 
 Example:
 
 ```php
-$config = [
+$config = new \Typesetterio\Typesetter\Config([
     'title' => 'Benjamin Button',
     'author' => 'F. Scott Fitzgerald',
     'theme' => 'bb',
@@ -42,15 +42,18 @@ $config = [
         new \Typesetterio\Typesetter\Observers\BreakToPageBreak(),
         new \Typesetterio\Typesetter\Observers\Credits(),
     ],
-];
+]);
 
-$config = new \Typsetterio\Typesetter\Config($config);
 $service = new \Typesetterio\Typesetter\Typesetter();
 $pdfContent = $service->generate($config);
 file_put_contents('my-pdf.pdf', $pdfContent);
 ```
 
 To learn more, please check out the [documentation](https://typesetter.io). This details configuration, customization, themes and cover generation, observers, listeners and more.
+
+## Demo
+
+The `demo/` directory contains a runnable example used for manual smoke testing. It includes a small theme, three Markdown chapters that exercise each bundled observer, and `demo/run.php`, which generates a PDF at `demo/output.pdf` (gitignored). Run it from the project root with `php demo/run.php`.
 
 ## Credits
 
