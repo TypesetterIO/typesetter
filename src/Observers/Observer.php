@@ -34,10 +34,18 @@ abstract class Observer implements \Typesetterio\Typesetter\Contracts\Observer
      */
     protected function getDomDocument(Chapter $chapter): DOMDocument
     {
+        // there is nothing to parse in an empty chapter, and loadHTML() refuses an empty string
+        if (trim($chapter->getHtml()) === '') {
+            return new DOMDocument('1.0', 'UTF-8');
+        }
+
         $originalDom = new DOMDocument('1.0', 'UTF-8');
 
+        // libxml reads the HTML as ISO-8859-1 unless told otherwise, so non-ASCII goes in as numeric entities
+        $html = mb_encode_numericentity($chapter->getHtml(), [0x80, 0x10FFFF, 0, 0x1FFFFF], 'UTF-8');
+
         // not doing html/body non-implied because that causes parsing errors in some contexts
-        $originalDom->loadHTML($chapter->getHtml(), LIBXML_HTML_NODEFDTD);
+        $originalDom->loadHTML($html, LIBXML_HTML_NODEFDTD);
 
         $resultDom = new DOMDocument('1.0', 'UTF-8');
         foreach ($originalDom->getElementsByTagName('body')->item(0)->childNodes as $node) {
