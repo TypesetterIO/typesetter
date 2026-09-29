@@ -54,4 +54,15 @@ class FirstElementInChapterCSSClassTest extends TestCase
 
         self::assertEquals('<p class="special">one</p><p>two</p>', trim($chapter->getHtml()));
     }
+
+    public function testEmptyChapterStaysEmpty(): void
+    {
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter->setHtml('');
+
+        $observer = new FirstElementInChapterCSSClass();
+        $observer->parsed($chapter);
+
+        self::assertEquals('', $chapter->getHtml());
+    }
 }

@@ -18,8 +18,10 @@ class FirstElementInChapterCSSClass extends Observer
         if ($this->skipFirst === false || !$chapter->isFirstChapter()) {
             $dom = $this->getDomDocument($chapter);
 
-            /** @var DOMElement $firstElement */
             $firstElement = $dom->firstChild;
+            if (!$firstElement instanceof DOMElement) {
+                return;
+            }
 
             $classes = array_filter(explode(' ', $firstElement->getAttribute('class')));
             $classes[] = $this->class;
