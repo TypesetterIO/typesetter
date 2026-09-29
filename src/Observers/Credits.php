@@ -16,7 +16,7 @@ class Credits extends Observer
     {
         if ($chapter->isLastChapter()) {
             $creditsHtml = sprintf(
-                '<div class="%s">Created using <a href="https:://typesetter.io">Typesetter.io</a></div>',
+                '<div class="%s">Created using <a href="https://typesetter.io">Typesetter.io</a></div>',
                 $this->class,
             );
 

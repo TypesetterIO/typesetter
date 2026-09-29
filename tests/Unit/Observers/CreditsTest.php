@@ -31,7 +31,7 @@ class CreditsTest extends TestCase
         $observer->parsed($chapter);
 
         self::assertEquals(
-            '<p>one</p><p>two</p><div class="credits-box">Created using <a href="https:://typesetter.io">Typesetter.io</a></div>',
+            '<p>one</p><p>two</p><div class="credits-box">Created using <a href="https://typesetter.io">Typesetter.io</a></div>',
             $chapter->getHtml()
         );
     }
@@ -45,7 +45,7 @@ class CreditsTest extends TestCase
         $observer->parsed($chapter);
 
         self::assertEquals(
-            '<p>a</p><p>b</p><div class="derp">Created using <a href="https:://typesetter.io">Typesetter.io</a></div>',
+            '<p>a</p><p>b</p><div class="derp">Created using <a href="https://typesetter.io">Typesetter.io</a></div>',
             $chapter->getHtml()
         );
     }
