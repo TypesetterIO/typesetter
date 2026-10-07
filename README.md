@@ -65,6 +65,6 @@ Run `make` to list the available targets.
 
 This was heavily influenced by the [Ibis](https://github.com/themsaid/ibis) project but is a complete rewrite.
 
-This package stands on the shoulders of giants like [MPDF](https://mpdf.github.io/), some parts of [Laravel](https://laravel.com) and also the [League Commonmark](https://commonmark.thephpleague.com/) library.
+This package stands on the shoulders of giants like [MPDF](https://mpdf.github.io/) and the [League Commonmark](https://commonmark.thephpleague.com/) library.
 
 [Aaron Saray](https://aaronsaray.com) is the primary author and maintainer.
