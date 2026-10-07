@@ -25,6 +25,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          extensions: gd
 
       - name: Composer install
         run: composer install --no-progress --no-ansi --prefer-dist

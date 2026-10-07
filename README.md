@@ -55,6 +55,12 @@ To learn more, please check out the [documentation](https://typesetter.io). This
 
 The `demo/` directory contains a runnable example used for manual smoke testing. It includes a small theme, three Markdown chapters that exercise each bundled observer, and `demo/run.php`, which generates a PDF at `demo/output.pdf` (gitignored). Run it from the project root with `php demo/run.php`.
 
+## Development
+
+Requires PHP 8.5, Composer, Docker, and [act](https://nektosact.com). On macOS, `brew install php composer act`.
+
+Run `make` to list the available targets.
+
 ## Credits
 
 This was heavily influenced by the [Ibis](https://github.com/themsaid/ibis) project but is a complete rewrite.
