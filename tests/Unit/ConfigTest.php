@@ -45,10 +45,8 @@ class ConfigTest extends TestCase
         self::assertEquals('Table of Contents', $config->tocHeader);
         self::assertEquals('{PAGENO}', $config->footer);
         self::assertEquals(['md', 'markdown'], $config->markdownExtensions);
-        self::assertEquals(1, $config->observers->count());
-        self::assertTrue($config->observers->contains(function ($event) {
-            return $event instanceof DefaultMarkdownConfiguration;
-        }));
+        self::assertCount(1, $config->observers);
+        self::assertContainsOnlyInstancesOf(DefaultMarkdownConfiguration::class, $config->observers);
     }
 
     public function testAllSpecifiedValues(): void
@@ -78,6 +76,6 @@ class ConfigTest extends TestCase
         self::assertEquals('ToC for Me', $config->tocHeader);
         self::assertEquals('', $config->footer);
         self::assertEquals(['txt'], $config->markdownExtensions);
-        self::assertFalse($config->observers->isEmpty());
+        self::assertCount(1, $config->observers);
     }
 }

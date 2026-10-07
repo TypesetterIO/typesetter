@@ -4,35 +4,68 @@ declare(strict_types=1);
 
 namespace Typesetterio\Typesetter;
 
-use Illuminate\Support\Collection;
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
 use League\CommonMark\Environment\Environment;
 use Mpdf\Mpdf;
 use Typesetterio\Typesetter\Contracts\Chapter;
 use Typesetterio\Typesetter\Contracts\Observer;
 
-class ObserverCollection extends Collection
+/**
+ * @implements IteratorAggregate<int, Observer>
+ */
+class ObserverCollection implements Countable, IteratorAggregate
 {
+    /** @var list<Observer> */
+    protected array $observers;
+
+    /** @param Observer[] $observers */
+    public function __construct(array $observers = [])
+    {
+        $this->observers = array_values($observers);
+    }
+
+    public function count(): int
+    {
+        return count($this->observers);
+    }
+
+    /** @return ArrayIterator<int, Observer> */
+    public function getIterator(): ArrayIterator
+    {
+        return new ArrayIterator($this->observers);
+    }
+
     public function initializedMarkdownEnvironment(Environment $environment): self
     {
-        $this->each(fn (Observer $observer) => $observer->initializedMarkdownEnvironment($environment));
+        foreach ($this->observers as $observer) {
+            $observer->initializedMarkdownEnvironment($environment);
+        }
         return $this;
     }
 
     public function initializedPdf(Mpdf $mpdf): self
     {
-        $this->each(fn (Observer $observer) => $observer->initializedPdf($mpdf));
+        foreach ($this->observers as $observer) {
+            $observer->initializedPdf($mpdf);
+        }
         return $this;
     }
 
     public function coverAdded(Mpdf $mpdf): self
     {
-        $this->each(fn (Observer $observer) => $observer->coverAdded($mpdf));
+        foreach ($this->observers as $observer) {
+            $observer->coverAdded($mpdf);
+        }
         return $this;
     }
 
     public function parsed(Chapter $chapter): self
     {
-        $this->each(fn (Observer $observer) => $observer->parsed($chapter));
+        foreach ($this->observers as $observer) {
+            $observer->parsed($chapter);
+        }
         return $this;
     }
 }
