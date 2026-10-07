@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Typesetterio\Typesetter;
 
 use FilesystemIterator;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Mpdf\Mpdf;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 use Typesetterio\Typesetter\Contracts\Event;
 use Typesetterio\Typesetter\Exceptions\ListenerInvalidException;
 
@@ -96,21 +95,24 @@ class Typesetter
 
         $this->dispatch(new Events\ContentGenerating());
 
-        $contentFiles = (new Collection(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+        $contentFiles = iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
             $bookConfig->content,
             FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS
-        ))))->filter(fn ($file) => in_array($file->getExtension(), $bookConfig->markdownExtensions, true))
-            ->filter($bookConfig->contentFilter)
-            ->unless(
-                empty($bookConfig->contentExtra),
-                fn(Collection $collection) => $collection->merge(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
-                    $bookConfig->contentExtra,
-                    FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS
-                )))
-            )
-            ->sortKeys();
+        )));
+        $contentFiles = array_filter(
+            $contentFiles,
+            fn (SplFileInfo $file) => in_array($file->getExtension(), $bookConfig->markdownExtensions, true)
+        );
+        $contentFiles = array_filter($contentFiles, $bookConfig->contentFilter, ARRAY_FILTER_USE_BOTH);
+        if (!empty($bookConfig->contentExtra)) {
+            $contentFiles = array_merge($contentFiles, iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                $bookConfig->contentExtra,
+                FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS
+            ))));
+        }
+        ksort($contentFiles);
 
-        $totalChapters = $contentFiles->count();
+        $totalChapters = count($contentFiles);
         $chapterNumber = 0;
         foreach ($contentFiles as $contentFile) {
             $chapterNumber++;
@@ -138,7 +140,7 @@ class Typesetter
 
     protected function dispatch(Event $event): void
     {
-        foreach (Arr::get($this->listeners, get_class($event), []) as $listener) {
+        foreach ($this->listeners[get_class($event)] ?? [] as $listener) {
             $listener($event);
         }
     }
