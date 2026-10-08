@@ -7,17 +7,17 @@ namespace Tests\Unit\Observers;
 use League\CommonMark\Output\RenderedContent;
 use Tests\TestCase;
 use Typesetterio\Typesetter\Chapter;
-use Typesetterio\Typesetter\Observers\FirstElementInChapterCSSClass;
+use Typesetterio\Typesetter\Observers\FirstElementInChapterCssClass;
 
-class FirstElementInChapterCSSClassTest extends TestCase
+class FirstElementInChapterCssClassTest extends TestCase
 {
     public function testNothingHappensWhenFirstChapterByDefault(): void
     {
         $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
-        $observer = new FirstElementInChapterCSSClass();
-        $observer->parsed($chapter);
+        $observer = new FirstElementInChapterCssClass();
+        $observer->chapterParsed($chapter);
 
         self::assertEquals('<p>one</p><p>two</p>', $chapter->getHtml());
     }
@@ -27,8 +27,8 @@ class FirstElementInChapterCSSClassTest extends TestCase
         $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
-        $observer = new FirstElementInChapterCSSClass(skipFirst: false);
-        $observer->parsed($chapter);
+        $observer = new FirstElementInChapterCssClass(skipFirst: false);
+        $observer->chapterParsed($chapter);
 
         self::assertEquals('<p class="chapter-beginning">one</p><p>two</p>', trim($chapter->getHtml()));
     }
@@ -38,8 +38,8 @@ class FirstElementInChapterCSSClassTest extends TestCase
         $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
         $chapter->setHtml('<p class="already-here">one</p><p>two</p>');
 
-        $observer = new FirstElementInChapterCSSClass();
-        $observer->parsed($chapter);
+        $observer = new FirstElementInChapterCssClass();
+        $observer->chapterParsed($chapter);
 
         self::assertEquals('<p class="already-here chapter-beginning">one</p><p>two</p>', trim($chapter->getHtml()));
     }
@@ -49,8 +49,8 @@ class FirstElementInChapterCSSClassTest extends TestCase
         $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
-        $observer = new FirstElementInChapterCSSClass(class: 'special');
-        $observer->parsed($chapter);
+        $observer = new FirstElementInChapterCssClass(class: 'special');
+        $observer->chapterParsed($chapter);
 
         self::assertEquals('<p class="special">one</p><p>two</p>', trim($chapter->getHtml()));
     }
@@ -60,8 +60,8 @@ class FirstElementInChapterCSSClassTest extends TestCase
         $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
         $chapter->setHtml('');
 
-        $observer = new FirstElementInChapterCSSClass();
-        $observer->parsed($chapter);
+        $observer = new FirstElementInChapterCssClass();
+        $observer->chapterParsed($chapter);
 
         self::assertEquals('', $chapter->getHtml());
     }

@@ -9,8 +9,10 @@ use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Mpdf\Mpdf;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use RuntimeException;
 use SplFileInfo;
 use Typesetterio\Typesetter\Contracts\Event;
+use Typesetterio\Typesetter\Exceptions\InvalidConfigException;
 use Typesetterio\Typesetter\Exceptions\InvalidListenerException;
 
 class Typesetter
@@ -55,18 +57,26 @@ class Typesetter
         $this->dispatch(new Events\PdfInitialized());
 
         $stylesheet = $bookConfig->theme . '/theme.html';
-        $mpdf->WriteHTML(file_get_contents($stylesheet));
+        $themeHtml = file_get_contents($stylesheet);
+        if ($themeHtml === false) {
+            throw new RuntimeException('Unable to read ' . $stylesheet);
+        }
+        $mpdf->WriteHTML($themeHtml);
         $this->dispatch(new Events\ThemeAdded());
 
         if (is_readable($bookConfig->theme . '/cover.jpg')) {
             $mpdf->Image($bookConfig->theme . '/cover.jpg', 0, 0, 210, 297, 'jpg', '', true, false);
             $this->dispatch(new Events\CoverImageAdded());
         } elseif (is_readable($bookConfig->theme . '/cover.html')) {
-            $mpdf->WriteHTML(file_get_contents($bookConfig->theme . '/cover.html'));
+            $coverHtml = file_get_contents($bookConfig->theme . '/cover.html');
+            if ($coverHtml === false) {
+                throw new RuntimeException('Unable to read ' . $bookConfig->theme . '/cover.html');
+            }
+            $mpdf->WriteHTML($coverHtml);
             $this->dispatch(new Events\CoverHtmlAdded());
         } else {
             $coverHtml = '<section style="text-align: center; page-break-after:always; padding-top: 100pt"><h1>%s</h1><h2>%s</h2></section>';
-            $mpdf->WriteHTML(sprintf($coverHtml, $bookConfig->title, $bookConfig->author));
+            $mpdf->WriteHTML(sprintf($coverHtml, htmlspecialchars($bookConfig->title), htmlspecialchars($bookConfig->author)));
             $this->dispatch(new Events\CoverGenerated());
         }
 
@@ -80,7 +90,7 @@ class Typesetter
             $mpdfTocDefinition = '<tocpagebreak toc-bookmarkText="Contents" toc-page-selector="toc-page"';
             $mpdfTocDefinition .= sprintf(' links="%s"', $bookConfig->tocLinks ? 'on' : 'off');
             if ($tocHeader = $bookConfig->tocHeader) {
-                $mpdfTocDefinition .= sprintf(' toc-preHTML="%s"', htmlentities('<h1 id="toc-header">' . $tocHeader . '</h1>'));
+                $mpdfTocDefinition .= sprintf(' toc-preHTML="%s"', htmlentities('<h1 id="toc-header">' . htmlspecialchars($tocHeader) . '</h1>'));
             }
             $mpdfTocDefinition .= '>';
             $mpdf->WriteHTML($mpdfTocDefinition);
@@ -95,22 +105,31 @@ class Typesetter
 
         $this->dispatch(new Events\ContentGenerating());
 
+        /** @var list<SplFileInfo> $contentFiles */
         $contentFiles = iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
             $bookConfig->content,
-            FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS
-        )));
-        $contentFiles = array_filter(
+            FilesystemIterator::SKIP_DOTS
+        )), false);
+        $contentFiles = array_values(array_filter(
             $contentFiles,
-            fn (SplFileInfo $file) => in_array($file->getExtension(), $bookConfig->markdownExtensions, true)
-        );
-        $contentFiles = array_filter($contentFiles, $bookConfig->contentFilter, ARRAY_FILTER_USE_BOTH);
+            fn (SplFileInfo $file) => $file->isFile()
+                && in_array($file->getExtension(), $bookConfig->markdownExtensions, true)
+                && ($bookConfig->contentFilter)($file, $file->getFilename())
+        ));
         if (!empty($bookConfig->contentExtra)) {
             $contentFiles = array_merge($contentFiles, iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 $bookConfig->contentExtra,
-                FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS
-            ))));
+                FilesystemIterator::SKIP_DOTS
+            )), false));
         }
-        ksort($contentFiles);
+
+        $fileNameCounts = array_count_values(array_map(fn (SplFileInfo $file) => $file->getFilename(), $contentFiles));
+        $duplicates = array_keys(array_filter($fileNameCounts, fn (int $count) => $count > 1));
+        if ($duplicates !== []) {
+            throw new InvalidConfigException('Duplicate content file names: ' . implode(', ', $duplicates));
+        }
+
+        usort($contentFiles, fn (SplFileInfo $a, SplFileInfo $b) => strcmp($a->getFilename(), $b->getFilename()));
 
         $totalChapters = count($contentFiles);
         $chapterNumber = 0;
@@ -118,6 +137,9 @@ class Typesetter
             $chapterNumber++;
 
             $markdown = file_get_contents($contentFile->getPathname());
+            if ($markdown === false) {
+                throw new RuntimeException('Unable to read ' . $contentFile->getPathname());
+            }
             $chapter = new Chapter(
                 markdown: $converter->convert($markdown),
                 chapterNumber: $chapterNumber,
@@ -131,11 +153,10 @@ class Typesetter
 
         $this->dispatch(new Events\PdfRendering());
 
-        try {
-            return $mpdf->OutputBinaryData();
-        } finally {
-            $this->dispatch(new Events\Finished());
-        }
+        $pdf = $mpdf->OutputBinaryData();
+        $this->dispatch(new Events\Finished());
+
+        return $pdf;
     }
 
     protected function dispatch(Event $event): void

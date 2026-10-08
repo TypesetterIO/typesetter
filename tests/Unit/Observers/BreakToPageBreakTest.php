@@ -17,7 +17,7 @@ class BreakToPageBreakTest extends TestCase
         $chapter->setHtml('<p>I am a tag</p><div>Another</div>');
 
         $observer = new BreakToPageBreak();
-        $observer->parsed($chapter);
+        $observer->chapterParsed($chapter);
         self::assertEquals('<p>I am a tag</p><div>Another</div>', $chapter->getHtml());
     }
 
@@ -27,7 +27,7 @@ class BreakToPageBreakTest extends TestCase
         $chapter->setHtml('<p>one</p><p>{BREAK}</p><div>two</div>{BREAK}<p>three</p>');
 
         $observer = new BreakToPageBreak();
-        $observer->parsed($chapter);
+        $observer->chapterParsed($chapter);
         self::assertEquals(
             '<p>one</p><p><div style="page-break-after:always"></div></p><div>two</div><div style="page-break-after:always"></div><p>three</p>',
             $chapter->getHtml()
@@ -40,7 +40,7 @@ class BreakToPageBreakTest extends TestCase
         $chapter->setHtml('<p>one</p><p>{BREAK}</p><div>two</div>{HONK}<p>three</p>');
 
         $observer = new BreakToPageBreak('{HONK}');
-        $observer->parsed($chapter);
+        $observer->chapterParsed($chapter);
         self::assertEquals(
             '<p>one</p><p>{BREAK}</p><div>two</div><div style="page-break-after:always"></div><p>three</p>',
             $chapter->getHtml()

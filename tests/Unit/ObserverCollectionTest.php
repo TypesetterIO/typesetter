@@ -14,14 +14,14 @@ use Typesetterio\Typesetter\Observers\Observer;
 
 class ObserverCollectionTest extends TestCase
 {
-    public function testInitializedMarkdownEnvironment(): void
+    public function testMarkdownEnvironmentInitialized(): void
     {
         $ob1 = new class extends Observer {
             public function __construct(public bool $loaded = false)
             {
             }
 
-            public function initializedMarkdownEnvironment(Environment $environment): void
+            public function markdownEnvironmentInitialized(Environment $environment): void
             {
                 $this->loaded = true;
             }
@@ -32,7 +32,7 @@ class ObserverCollectionTest extends TestCase
             {
             }
 
-            public function initializedMarkdownEnvironment(Environment $environment): void
+            public function markdownEnvironmentInitialized(Environment $environment): void
             {
                 $this->loaded = true;
             }
@@ -43,27 +43,27 @@ class ObserverCollectionTest extends TestCase
             {
             }
 
-            public function initializedMarkdownEnvironment(Environment $environment): void
+            public function markdownEnvironmentInitialized(Environment $environment): void
             {
                 $this->loaded = true;
             }
         };
 
         $collection = new ObserverCollection([$ob1, $ob2, $ob3]);
-        $collection->initializedMarkdownEnvironment(new Environment());
+        $collection->markdownEnvironmentInitialized(new Environment());
         self::assertTrue($ob1->loaded);
         self::assertTrue($ob2->loaded);
         self::assertTrue($ob3->loaded);
     }
 
-    public function testParsed(): void
+    public function testChapterParsed(): void
     {
         $ob1 = new class extends Observer {
             public function __construct(public bool $loaded = false)
             {
             }
 
-            public function parsed(Chapter $chapter): void
+            public function chapterParsed(Chapter $chapter): void
             {
                 $this->loaded = true;
             }
@@ -74,7 +74,7 @@ class ObserverCollectionTest extends TestCase
             {
             }
 
-            public function parsed(Chapter $chapter): void
+            public function chapterParsed(Chapter $chapter): void
             {
                 $this->loaded = true;
             }
@@ -85,14 +85,14 @@ class ObserverCollectionTest extends TestCase
             {
             }
 
-            public function parsed(Chapter $chapter): void
+            public function chapterParsed(Chapter $chapter): void
             {
                 $this->loaded = true;
             }
         };
 
         $collection = new ObserverCollection([$ob1, $ob2, $ob3]);
-        $collection->parsed(new ChapterConcrete($this->createStub(RenderedContent::class), 1, 1));
+        $collection->chapterParsed(new ChapterConcrete($this->createStub(RenderedContent::class), 1, 1));
         self::assertTrue($ob1->loaded);
         self::assertTrue($ob2->loaded);
         self::assertTrue($ob3->loaded);

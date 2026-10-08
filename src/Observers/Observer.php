@@ -45,10 +45,14 @@ abstract class Observer implements \Typesetterio\Typesetter\Contracts\Observer
         $html = mb_encode_numericentity($chapter->getHtml(), [0x80, 0x10FFFF, 0, 0x1FFFFF], 'UTF-8');
 
         // not doing html/body non-implied because that causes parsing errors in some contexts
-        $originalDom->loadHTML($html, LIBXML_HTML_NODEFDTD);
+        $originalDom->loadHTML($html, LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING);
 
         $resultDom = new DOMDocument('1.0', 'UTF-8');
-        foreach ($originalDom->getElementsByTagName('body')->item(0)->childNodes as $node) {
+        $body = $originalDom->getElementsByTagName('body')->item(0);
+        if ($body === null) {
+            return $resultDom;
+        }
+        foreach ($body->childNodes as $node) {
             $resultDom->appendChild($resultDom->importNode($node, true));
         }
 

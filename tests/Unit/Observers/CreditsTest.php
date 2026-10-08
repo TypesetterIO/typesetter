@@ -17,7 +17,7 @@ class CreditsTest extends TestCase
         $chapter->setHtml('<p>one</p><p>two</p>');
 
         $observer = new Credits();
-        $observer->parsed($chapter);
+        $observer->chapterParsed($chapter);
 
         self::assertEquals('<p>one</p><p>two</p>', $chapter->getHtml());
     }
@@ -28,7 +28,7 @@ class CreditsTest extends TestCase
         $chapter->setHtml('<p>one</p><p>two</p>');
 
         $observer = new Credits();
-        $observer->parsed($chapter);
+        $observer->chapterParsed($chapter);
 
         self::assertEquals(
             '<p>one</p><p>two</p><div class="credits-box">Created using <a href="https://typesetter.io">Typesetter.io</a></div>',
@@ -42,7 +42,7 @@ class CreditsTest extends TestCase
         $chapter->setHtml('<p>a</p><p>b</p>');
 
         $observer = new Credits(class: 'derp');
-        $observer->parsed($chapter);
+        $observer->chapterParsed($chapter);
 
         self::assertEquals(
             '<p>a</p><p>b</p><div class="derp">Created using <a href="https://typesetter.io">Typesetter.io</a></div>',

@@ -15,13 +15,13 @@ use Typesetterio\Typesetter\Events\CoverHtmlAdded;
 use Typesetterio\Typesetter\Events\CoverImageAdded;
 use Typesetterio\Typesetter\Events\Finished;
 use Typesetterio\Typesetter\Events\FooterGenerated;
-use Typesetterio\Typesetter\Events\InitializedMarkdown;
-use Typesetterio\Typesetter\Events\PDFInitialized;
-use Typesetterio\Typesetter\Events\PDFRendering;
+use Typesetterio\Typesetter\Events\MarkdownInitialized;
+use Typesetterio\Typesetter\Events\PdfInitialized;
+use Typesetterio\Typesetter\Events\PdfRendering;
 use Typesetterio\Typesetter\Events\Starting;
 use Typesetterio\Typesetter\Events\ThemeAdded;
-use Typesetterio\Typesetter\Events\TOCGenerated;
-use Typesetterio\Typesetter\Exceptions\ListenerInvalidException;
+use Typesetterio\Typesetter\Events\TocGenerated;
+use Typesetterio\Typesetter\Exceptions\InvalidListenerException;
 use Typesetterio\Typesetter\Typesetter;
 
 class TypesetterTest extends TestCase
@@ -29,7 +29,7 @@ class TypesetterTest extends TestCase
     // this test generates a warning - but that's ok
     public function testRegisterListenerNoImplementationsThrowsException(): void
     {
-        $this->expectException(ListenerInvalidException::class);
+        $this->expectException(InvalidListenerException::class);
         $this->expectExceptionMessage('not-a-class has failed to generate an implementation array.');
 
         $typesetter = new Typesetter();
@@ -39,7 +39,7 @@ class TypesetterTest extends TestCase
 
     public function testRegisterListenersNotImplementEventContractThrowsException(): void
     {
-        $this->expectException(ListenerInvalidException::class);
+        $this->expectException(InvalidListenerException::class);
         $this->expectExceptionMessage('Typesetterio\Typesetter\Contracts\Observer does not implement the contract Typesetterio\Typesetter\Contracts\Event');
 
         $typesetter = new Typesetter();
@@ -52,18 +52,19 @@ class TypesetterTest extends TestCase
         $theme = __DIR__ . '/../data/theme';
         $config = new Config([
             'theme' => $theme,
+            'content' => $theme,
             'title' => 'A title',
             'author' => 'An author',
         ]);
 
         $typesetter = new Typesetter();
         $typesetter->listen(Starting::class, $startingListener = $this->newTestableListener(Starting::class));
-        $typesetter->listen(InitializedMarkdown::class, $startingListener = $this->newTestableListener(InitializedMarkdown::class));
-        $typesetter->listen(PDFInitialized::class, $startingListener = $this->newTestableListener(PDFInitialized::class));
+        $typesetter->listen(MarkdownInitialized::class, $startingListener = $this->newTestableListener(MarkdownInitialized::class));
+        $typesetter->listen(PdfInitialized::class, $startingListener = $this->newTestableListener(PdfInitialized::class));
         $typesetter->listen(ThemeAdded::class, $startingListener = $this->newTestableListener(ThemeAdded::class));
         $typesetter->listen(CoverGenerated::class, $startingListener = $this->newTestableListener(CoverGenerated::class));
         $typesetter->listen(ContentGenerating::class, $startingListener = $this->newTestableListener(ContentGenerating::class));
-        $typesetter->listen(PDFRendering::class, $startingListener = $this->newTestableListener(PDFRendering::class));
+        $typesetter->listen(PdfRendering::class, $startingListener = $this->newTestableListener(PdfRendering::class));
         $typesetter->listen(Finished::class, $startingListener = $this->newTestableListener(Finished::class));
 
         $result = $typesetter->generate($config);
@@ -80,7 +81,7 @@ class TypesetterTest extends TestCase
             {
             }
 
-            public function parsed(Chapter $chapter): void
+            public function chapterParsed(Chapter $chapter): void
             {
                 $this->times++;
             }
@@ -100,14 +101,14 @@ class TypesetterTest extends TestCase
 
         $typesetter = new Typesetter();
         $typesetter->listen(Starting::class, $startingListener = $this->newTestableListener(Starting::class));
-        $typesetter->listen(InitializedMarkdown::class, $startingListener = $this->newTestableListener(InitializedMarkdown::class));
-        $typesetter->listen(PDFInitialized::class, $startingListener = $this->newTestableListener(PDFInitialized::class));
+        $typesetter->listen(MarkdownInitialized::class, $startingListener = $this->newTestableListener(MarkdownInitialized::class));
+        $typesetter->listen(PdfInitialized::class, $startingListener = $this->newTestableListener(PdfInitialized::class));
         $typesetter->listen(ThemeAdded::class, $startingListener = $this->newTestableListener(ThemeAdded::class));
         $typesetter->listen(CoverHtmlAdded::class, $startingListener = $this->newTestableListener(CoverHtmlAdded::class));
-        $typesetter->listen(TOCGenerated::class, $startingListener = $this->newTestableListener(TOCGenerated::class));
+        $typesetter->listen(TocGenerated::class, $startingListener = $this->newTestableListener(TocGenerated::class));
         $typesetter->listen(FooterGenerated::class, $startingListener = $this->newTestableListener(FooterGenerated::class));
         $typesetter->listen(ContentGenerating::class, $startingListener = $this->newTestableListener(ContentGenerating::class));
-        $typesetter->listen(PDFRendering::class, $startingListener = $this->newTestableListener(PDFRendering::class));
+        $typesetter->listen(PdfRendering::class, $startingListener = $this->newTestableListener(PdfRendering::class));
         $typesetter->listen(Finished::class, $startingListener = $this->newTestableListener(Finished::class));
 
         $result = $typesetter->generate($config);
@@ -124,7 +125,7 @@ class TypesetterTest extends TestCase
             {
             }
 
-            public function parsed(Chapter $chapter): void
+            public function chapterParsed(Chapter $chapter): void
             {
                 $this->times++;
             }
@@ -144,14 +145,14 @@ class TypesetterTest extends TestCase
 
         $typesetter = new Typesetter();
         $typesetter->listen(Starting::class, $startingListener = $this->newTestableListener(Starting::class));
-        $typesetter->listen(InitializedMarkdown::class, $startingListener = $this->newTestableListener(InitializedMarkdown::class));
-        $typesetter->listen(PDFInitialized::class, $startingListener = $this->newTestableListener(PDFInitialized::class));
+        $typesetter->listen(MarkdownInitialized::class, $startingListener = $this->newTestableListener(MarkdownInitialized::class));
+        $typesetter->listen(PdfInitialized::class, $startingListener = $this->newTestableListener(PdfInitialized::class));
         $typesetter->listen(ThemeAdded::class, $startingListener = $this->newTestableListener(ThemeAdded::class));
         $typesetter->listen(CoverImageAdded::class, $startingListener = $this->newTestableListener(CoverImageAdded::class));
-        $typesetter->listen(TOCGenerated::class, $startingListener = $this->newTestableListener(TOCGenerated::class));
+        $typesetter->listen(TocGenerated::class, $startingListener = $this->newTestableListener(TocGenerated::class));
         $typesetter->listen(FooterGenerated::class, $startingListener = $this->newTestableListener(FooterGenerated::class));
         $typesetter->listen(ContentGenerating::class, $startingListener = $this->newTestableListener(ContentGenerating::class));
-        $typesetter->listen(PDFRendering::class, $startingListener = $this->newTestableListener(PDFRendering::class));
+        $typesetter->listen(PdfRendering::class, $startingListener = $this->newTestableListener(PdfRendering::class));
         $typesetter->listen(Finished::class, $startingListener = $this->newTestableListener(Finished::class));
 
         $result = $typesetter->generate($config);

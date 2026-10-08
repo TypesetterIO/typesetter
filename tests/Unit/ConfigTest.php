@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Typesetterio\Typesetter\Config;
-use Typesetterio\Typesetter\Exceptions\TypesetterConfigException;
+use Typesetterio\Typesetter\Exceptions\InvalidConfigException;
 use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
 use Typesetterio\Typesetter\Observers\Observer;
 
@@ -14,7 +14,7 @@ class ConfigTest extends TestCase
 {
     public function testMissingThemeFileThrowsException(): void
     {
-        $this->expectException(TypesetterConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Missing theme.html: ./not-found/theme.html');
 
         $config = new Config(['theme' => './not-found']);
@@ -22,7 +22,7 @@ class ConfigTest extends TestCase
 
     public function testMissingContentDirectoryThrowsException(): void
     {
-        $this->expectException(TypesetterConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Unable to find a readable content directory: ./not-found');
 
         chdir(__DIR__ . '/../data/theme');
