@@ -61,6 +61,10 @@ Requires PHP 8.5, Composer, Docker, and [act](https://nektosact.com). On macOS, 
 
 Run `make` to list the available targets.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
 ## Credits
 
 This was heavily influenced by the [Ibis](https://github.com/themsaid/ibis) project but is a complete rewrite.
