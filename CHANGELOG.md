@@ -21,9 +21,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
-- Content files with the same file name in different directories, or in both `content` and `content-extra`, no longer silently replace each other. `generate()` throws `InvalidConfigException` naming the duplicates.
-- The DOM helper used by the bundled observers no longer emits PHP warnings for HTML5 tags such as `<section>` and `<figure>`.
-- A chapter containing only an HTML comment no longer crashes the DOM helper.
-- The `Finished` event fires only after the PDF is rendered, not when rendering fails.
-- The title and author on the generated cover and the `toc-header` text are HTML-escaped.
-- An unreadable `theme.html`, `cover.html`, or content file throws a `RuntimeException` naming the file instead of a `TypeError`.
+- Content files with the same name in different directories no longer replace each other; `generate()` throws `InvalidConfigException`.
+- HTML5 tags no longer trigger PHP warnings in observers that rewrite chapter HTML.
+- A chapter containing only an HTML comment no longer crashes those observers.
+- `Finished` fires only when rendering succeeds.
+- The generated cover's title and author, and the `toc-header` text, are HTML-escaped.
+- An unreadable `theme.html`, `cover.html`, or content file throws a `RuntimeException` naming the file.
