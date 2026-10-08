@@ -17,7 +17,7 @@ class DefaultMarkdownConfiguration extends Observer
     {
     }
 
-    public function initializedMarkdownEnvironment(Environment $environment): void
+    public function markdownEnvironmentInitialized(Environment $environment): void
     {
         $environment->addRenderer(FencedCode::class, new FencedCodeRenderer($this->languagesToProcess));
         $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer($this->languagesToProcess));

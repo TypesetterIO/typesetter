@@ -6,6 +6,6 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-class PDFRendering implements Event
+class TocGenerated implements Event
 {
 }

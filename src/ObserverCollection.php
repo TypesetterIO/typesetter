@@ -37,18 +37,18 @@ class ObserverCollection implements Countable, IteratorAggregate
         return new ArrayIterator($this->observers);
     }
 
-    public function initializedMarkdownEnvironment(Environment $environment): self
+    public function markdownEnvironmentInitialized(Environment $environment): self
     {
         foreach ($this->observers as $observer) {
-            $observer->initializedMarkdownEnvironment($environment);
+            $observer->markdownEnvironmentInitialized($environment);
         }
         return $this;
     }
 
-    public function initializedPdf(Mpdf $mpdf): self
+    public function pdfInitialized(Mpdf $mpdf): self
     {
         foreach ($this->observers as $observer) {
-            $observer->initializedPdf($mpdf);
+            $observer->pdfInitialized($mpdf);
         }
         return $this;
     }
@@ -61,10 +61,10 @@ class ObserverCollection implements Countable, IteratorAggregate
         return $this;
     }
 
-    public function parsed(Chapter $chapter): self
+    public function chapterParsed(Chapter $chapter): self
     {
         foreach ($this->observers as $observer) {
-            $observer->parsed($chapter);
+            $observer->chapterParsed($chapter);
         }
         return $this;
     }

@@ -1,6 +1,6 @@
 # Introduction
 
-This is the first chapter of our demo book. The `FirstElementInChapterCSSClass`
+This is the first chapter of our demo book. The `FirstElementInChapterCssClass`
 observer skips the very first chapter by default, so this paragraph should
 *not* receive the `chapter-beginning` class.
 

@@ -12,7 +12,7 @@ class BreakToPageBreak extends Observer
     {
     }
 
-    public function parsed(Chapter $chapter): void
+    public function chapterParsed(Chapter $chapter): void
     {
         $breakHtml = '<div style="page-break-after:always"></div>';
 

@@ -9,11 +9,11 @@ use Mpdf\Mpdf;
 
 interface Observer
 {
-    public function parsed(Chapter $chapter): void;
+    public function chapterParsed(Chapter $chapter): void;
 
-    public function initializedMarkdownEnvironment(Environment $environment): void;
+    public function markdownEnvironmentInitialized(Environment $environment): void;
 
-    public function initializedPdf(Mpdf $mpdf): void;
+    public function pdfInitialized(Mpdf $mpdf): void;
 
     public function coverAdded(Mpdf $mpdf): void;
 }

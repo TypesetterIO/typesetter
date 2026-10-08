@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Typesetterio\Typesetter;
 
 use Closure;
-use Typesetterio\Typesetter\Exceptions\TypesetterConfigException;
+use Typesetterio\Typesetter\Exceptions\InvalidConfigException;
 use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
 
 class Config
@@ -39,16 +39,16 @@ class Config
         $this->theme = $config['theme'] ?? '.';
         $themeHtmlFile = $this->theme . '/theme.html';
         if (!is_readable($themeHtmlFile)) {
-            throw new TypesetterConfigException('Missing theme.html: ' . $themeHtmlFile);
+            throw new InvalidConfigException('Missing theme.html: ' . $themeHtmlFile);
         }
 
         $this->content = $config['content'] ?? '.';
         if (!is_dir($this->content) || !is_readable($this->content)) {
-            throw new TypesetterConfigException('Unable to find a readable content directory: ' . $this->content);
+            throw new InvalidConfigException('Unable to find a readable content directory: ' . $this->content);
         }
-        $this->contentFilter = $config['contentFilter'] ?? fn() => true;
+        $this->contentFilter = $config['content-filter'] ?? fn() => true;
 
-        $this->contentExtra = $config['contentExtra'] ?? '';
+        $this->contentExtra = $config['content-extra'] ?? '';
 
         $this->title = $config['title'] ?? 'My Typeset Book';
         $this->author = $config['author'] ?? 'Joey Bubblegum';

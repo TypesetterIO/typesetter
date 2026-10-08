@@ -11,7 +11,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 use Typesetterio\Typesetter\Contracts\Event;
-use Typesetterio\Typesetter\Exceptions\ListenerInvalidException;
+use Typesetterio\Typesetter\Exceptions\InvalidListenerException;
 
 class Typesetter
 {
@@ -21,10 +21,10 @@ class Typesetter
     {
         $implementations = @class_implements($eventClass);
         if ($implementations === false) {
-            throw new ListenerInvalidException($eventClass . ' has failed to generate an implementation array.');
+            throw new InvalidListenerException($eventClass . ' has failed to generate an implementation array.');
         }
         if (!in_array(Event::class, $implementations, true)) {
-            throw new ListenerInvalidException($eventClass . ' does not implement the contract ' . Event::class);
+            throw new InvalidListenerException($eventClass . ' does not implement the contract ' . Event::class);
         }
 
         $this->listeners[$eventClass][] = $listener;
@@ -36,9 +36,9 @@ class Typesetter
 
         $converter = new GithubFlavoredMarkdownConverter();
 
-        $bookConfig->observers->initializedMarkdownEnvironment($converter->getEnvironment());
+        $bookConfig->observers->markdownEnvironmentInitialized($converter->getEnvironment());
 
-        $this->dispatch(new Events\InitializedMarkdown());
+        $this->dispatch(new Events\MarkdownInitialized());
 
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
@@ -50,9 +50,9 @@ class Typesetter
         $mpdf->SetTitle($bookConfig->title);
         $mpdf->SetAuthor($bookConfig->author);
 
-        $bookConfig->observers->initializedPdf($mpdf);
+        $bookConfig->observers->pdfInitialized($mpdf);
 
-        $this->dispatch(new Events\PDFInitialized());
+        $this->dispatch(new Events\PdfInitialized());
 
         $stylesheet = $bookConfig->theme . '/theme.html';
         $mpdf->WriteHTML(file_get_contents($stylesheet));
@@ -84,7 +84,7 @@ class Typesetter
             }
             $mpdfTocDefinition .= '>';
             $mpdf->WriteHTML($mpdfTocDefinition);
-            $this->dispatch(new Events\TOCGenerated());
+            $this->dispatch(new Events\TocGenerated());
         }
 
         if ($bookConfig->footer) {
@@ -124,12 +124,12 @@ class Typesetter
                 totalChapters: $totalChapters
             );
 
-            $bookConfig->observers->parsed($chapter);
+            $bookConfig->observers->chapterParsed($chapter);
 
             $mpdf->WriteHTML($chapter->getHtml());
         }
 
-        $this->dispatch(new Events\PDFRendering());
+        $this->dispatch(new Events\PdfRendering());
 
         try {
             return $mpdf->OutputBinaryData();

@@ -8,7 +8,7 @@ use Typesetterio\Typesetter\Config;
 use Typesetterio\Typesetter\Observers\BreakToPageBreak;
 use Typesetterio\Typesetter\Observers\Credits;
 use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
-use Typesetterio\Typesetter\Observers\FirstElementInChapterCSSClass;
+use Typesetterio\Typesetter\Observers\FirstElementInChapterCssClass;
 use Typesetterio\Typesetter\Typesetter;
 
 $config = new Config([
@@ -18,7 +18,7 @@ $config = new Config([
     'content' => __DIR__ . '/content',
     'observers' => [
         new DefaultMarkdownConfiguration(),
-        new FirstElementInChapterCSSClass(),
+        new FirstElementInChapterCssClass(),
         new BreakToPageBreak(),
         new Credits(),
     ],

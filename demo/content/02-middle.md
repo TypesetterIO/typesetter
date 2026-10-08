@@ -1,6 +1,6 @@
 # The Middle Chapter
 
-This chapter exists to verify that the `FirstElementInChapterCSSClass` observer
+This chapter exists to verify that the `FirstElementInChapterCssClass` observer
 applies its class to the first element of non-first chapters. The proof is
 that this chapter starts on its own page, because the theme applies
 `page-break-before` to the `chapter-beginning` class.

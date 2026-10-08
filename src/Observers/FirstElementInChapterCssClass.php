@@ -7,13 +7,13 @@ namespace Typesetterio\Typesetter\Observers;
 use DOMElement;
 use Typesetterio\Typesetter\Contracts\Chapter;
 
-class FirstElementInChapterCSSClass extends Observer
+class FirstElementInChapterCssClass extends Observer
 {
     public function __construct(protected string $class = 'chapter-beginning', protected bool $skipFirst = true)
     {
     }
 
-    public function parsed(Chapter $chapter): void
+    public function chapterParsed(Chapter $chapter): void
     {
         if ($this->skipFirst === false || !$chapter->isFirstChapter()) {
             $dom = $this->getDomDocument($chapter);

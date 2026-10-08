@@ -12,7 +12,7 @@ class Credits extends Observer
     {
     }
 
-    public function parsed(Chapter $chapter): void
+    public function chapterParsed(Chapter $chapter): void
     {
         if ($chapter->isLastChapter()) {
             $creditsHtml = sprintf(

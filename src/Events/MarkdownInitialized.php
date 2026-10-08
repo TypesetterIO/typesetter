@@ -6,6 +6,6 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-class TOCGenerated implements Event
+class MarkdownInitialized implements Event
 {
 }

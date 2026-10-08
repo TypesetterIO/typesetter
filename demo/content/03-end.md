@@ -5,7 +5,7 @@ to the end of this chapter and only this one, because it checks
 `isLastChapter()`.
 
 This chapter also starts on its own page, again courtesy of the
-`FirstElementInChapterCSSClass` observer adding the `chapter-beginning`
+`FirstElementInChapterCssClass` observer adding the `chapter-beginning`
 class.
 
 ## Wrap-up
