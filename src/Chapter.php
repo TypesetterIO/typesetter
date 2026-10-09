@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Typesetterio\Typesetter;
 
 use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
-use League\CommonMark\Output\RenderedContent;
 use League\CommonMark\Output\RenderedContentInterface;
+use Stringable;
 
-class Chapter implements Contracts\Chapter
+final class Chapter implements Contracts\Chapter
 {
-    protected string $html;
+    private string $html;
 
-    public function __construct(protected RenderedContent|RenderedContentInterface $markdown, protected int $chapterNumber, protected int $totalChapters)
+    public function __construct(private readonly RenderedContentInterface $markdown, private readonly int $chapterNumber, private readonly int $totalChapters)
     {
         $this->setHtml($markdown);
     }
@@ -22,7 +22,7 @@ class Chapter implements Contracts\Chapter
         return $this->html;
     }
 
-    public function setHtml($html): void
+    public function setHtml(string|Stringable $html): void
     {
         $this->html = (string) $html;
     }
@@ -47,6 +47,7 @@ class Chapter implements Contracts\Chapter
         return $this->chapterNumber === $this->totalChapters;
     }
 
+    /** @return array<string, mixed> */
     public function getMetaData(): array
     {
         return $this->markdown instanceof RenderedContentWithFrontMatter ? $this->markdown->getFrontMatter() : [];

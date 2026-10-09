@@ -6,6 +6,6 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-class ThemeAdded implements Event
+final class ThemeAdded implements Event
 {
 }

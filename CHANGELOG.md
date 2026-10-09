@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Renamed the `FirstElementInChapterCSSClass` observer to `FirstElementInChapterCssClass`.
 - Renamed exceptions: `TypesetterConfigException` to `InvalidConfigException`, `ListenerInvalidException` to `InvalidListenerException`.
 - Renamed config keys: `contentFilter` to `content-filter`, `contentExtra` to `content-extra`.
+- `Chapter::setHtml()` and the `Chapter` contract type the parameter as `string|Stringable`.
+- `Config` is a `readonly` class.
+- `Chapter`, `ObserverCollection`, and every event class are `final`.
+- `Typesetter::listen()` with a class that does not implement `Event` throws `InvalidListenerException`.
 
 ### Removed
 

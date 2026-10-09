@@ -15,10 +15,10 @@ use Typesetterio\Typesetter\Contracts\Observer;
 /**
  * @implements IteratorAggregate<int, Observer>
  */
-class ObserverCollection implements Countable, IteratorAggregate
+final class ObserverCollection implements Countable, IteratorAggregate
 {
     /** @var list<Observer> */
-    protected array $observers;
+    private array $observers;
 
     /** @param Observer[] $observers */
     public function __construct(array $observers = [])

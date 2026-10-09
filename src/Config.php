@@ -8,7 +8,7 @@ use Closure;
 use Typesetterio\Typesetter\Exceptions\InvalidConfigException;
 use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
 
-class Config
+readonly class Config
 {
     public string $theme;
 
@@ -30,10 +30,27 @@ class Config
 
     public string $footer;
 
+    /** @var list<string> */
     public array $markdownExtensions;
 
     public ObserverCollection $observers;
 
+    /**
+     * @param array{
+     *     theme?: string,
+     *     content?: string,
+     *     'content-filter'?: callable,
+     *     'content-extra'?: string,
+     *     title?: string,
+     *     author?: string,
+     *     'toc-enabled'?: bool,
+     *     'toc-links'?: bool,
+     *     'toc-header'?: string,
+     *     footer?: string,
+     *     'markdown-extensions'?: list<string>,
+     *     observers?: list<\Typesetterio\Typesetter\Contracts\Observer>,
+     * } $config
+     */
     public function __construct(array $config)
     {
         $this->theme = $config['theme'] ?? '.';

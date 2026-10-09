@@ -6,6 +6,6 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-class ContentGenerating implements Event
+final class ContentGenerating implements Event
 {
 }

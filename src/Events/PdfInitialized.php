@@ -6,6 +6,6 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-class PdfInitialized implements Event
+final class PdfInitialized implements Event
 {
 }

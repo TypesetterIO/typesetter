@@ -17,16 +17,13 @@ use Typesetterio\Typesetter\Exceptions\InvalidListenerException;
 
 class Typesetter
 {
+    /** @var array<class-string<Event>, list<callable(Event): void>> */
     protected array $listeners = [];
 
     public function listen(string $eventClass, callable $listener): void
     {
-        $implementations = @class_implements($eventClass);
-        if ($implementations === false) {
-            throw new InvalidListenerException($eventClass . ' has failed to generate an implementation array.');
-        }
-        if (!in_array(Event::class, $implementations, true)) {
-            throw new InvalidListenerException($eventClass . ' does not implement the contract ' . Event::class);
+        if (!is_subclass_of($eventClass, Event::class)) {
+            throw new InvalidListenerException(sprintf('%s does not implement %s', $eventClass, Event::class));
         }
 
         $this->listeners[$eventClass][] = $listener;

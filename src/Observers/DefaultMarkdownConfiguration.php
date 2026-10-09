@@ -13,6 +13,7 @@ use Spatie\CommonMarkHighlighter\IndentedCodeRenderer;
 
 class DefaultMarkdownConfiguration extends Observer
 {
+    /** @param list<string> $languagesToProcess */
     public function __construct(protected array $languagesToProcess = ['html', 'php', 'js'])
     {
     }

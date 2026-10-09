@@ -26,11 +26,10 @@ use Typesetterio\Typesetter\Typesetter;
 
 class TypesetterTest extends TestCase
 {
-    // this test generates a warning - but that's ok
     public function testRegisterListenerNoImplementationsThrowsException(): void
     {
         $this->expectException(InvalidListenerException::class);
-        $this->expectExceptionMessage('not-a-class has failed to generate an implementation array.');
+        $this->expectExceptionMessage('not-a-class does not implement Typesetterio\Typesetter\Contracts\Event');
 
         $typesetter = new Typesetter();
         $typesetter->listen('not-a-class', function () {
@@ -40,7 +39,7 @@ class TypesetterTest extends TestCase
     public function testRegisterListenersNotImplementEventContractThrowsException(): void
     {
         $this->expectException(InvalidListenerException::class);
-        $this->expectExceptionMessage('Typesetterio\Typesetter\Contracts\Observer does not implement the contract Typesetterio\Typesetter\Contracts\Event');
+        $this->expectExceptionMessage('Typesetterio\Typesetter\Contracts\Observer does not implement Typesetterio\Typesetter\Contracts\Event');
 
         $typesetter = new Typesetter();
         $typesetter->listen(Observer::class, function () {

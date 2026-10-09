@@ -6,6 +6,6 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-class TocGenerated implements Event
+final class TocGenerated implements Event
 {
 }
