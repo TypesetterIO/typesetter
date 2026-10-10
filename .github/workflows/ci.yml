@@ -12,11 +12,48 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  CI:
+  qa:
+    name: QA (PHP 8.5, highest dependencies)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP 8.5
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: gd
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Composer install
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: highest
+
+      - name: Composer audit
+        run: composer audit --no-ansi --abandoned=report
+
+      - name: PHP CS Fixer
+        run: composer phpcs
+
+      - name: PHPStan
+        run: composer phpstan
+
+  tests:
+    name: PHP ${{ matrix.php }} (${{ matrix.dependencies }} dependencies)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     strategy:
       fail-fast: false
@@ -27,8 +64,6 @@ jobs:
           - php: '8.3'
             dependencies: lowest
 
-    name: PHP ${{ matrix.php }} (${{ matrix.dependencies }} dependencies)
-
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,26 +71,16 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: ${{ matrix.php }}
           extensions: gd
           coverage: none
 
-      - name: Validate composer.json
-        run: composer validate --strict
-
       - name: Composer install
-        run: composer update --no-progress --no-ansi --prefer-dist ${{ matrix.dependencies == 'lowest' && '--prefer-lowest' || '' }}
-
-      - name: Composer audit
-        run: composer audit --no-ansi --abandoned=report
-
-      - name: PHP CS Fixer
-        run: composer phpcs
-
-      - name: PHPStan
-        run: composer phpstan
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
 
       - name: Run tests
         run: composer test
