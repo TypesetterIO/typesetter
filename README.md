@@ -55,7 +55,7 @@ To learn more, please check out the [documentation](https://typesetter.io). This
 
 ## Demo
 
-The `demo/` directory contains a runnable example used for manual smoke testing. It includes a small theme, three Markdown chapters that exercise each bundled observer, and `demo/run.php`, which generates a PDF at `demo/output.pdf` (gitignored). Run it from the project root with `php demo/run.php`.
+`php demo/run.php` generates `demo/output.pdf`, a book that exercises the library's features and states on each page what it should look like.
 
 ## Development
 

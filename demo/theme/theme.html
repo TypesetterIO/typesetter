@@ -1,18 +1,501 @@
+<htmlpagefooter name="demo-footer">
+    <footer class="footer">Typesetter Demo Book  |  {PAGENO} of {nbpg}</footer>
+</htmlpagefooter>
 <style>
+    /* Pages */
+
+    @page toc-page {
+        margin: 22mm 36mm 16mm 36mm;
+    }
+
+    @page standard {
+        size: portrait;
+        margin: 14mm 27mm 14mm 27mm;
+        odd-footer-name: html_demo-footer;
+        even-footer-name: html_demo-footer;
+    }
+
+    @page wide {
+        size: portrait;
+        margin: 14mm 10mm 14mm 10mm;
+        odd-footer-name: html_demo-footer;
+        even-footer-name: html_demo-footer;
+    }
+
+    @page landscape {
+        size: landscape;
+        margin: 14mm 18mm 14mm 18mm;
+        odd-footer-name: html_demo-footer;
+        even-footer-name: html_demo-footer;
+    }
+
+    .standard-page {
+        page: standard;
+    }
+
+    .wide-page {
+        page: wide;
+    }
+
+    .landscape-page {
+        page: landscape;
+    }
+
+    /* Type */
+
+    body {
+        font-family: freeserif;
+        font-size: 11.5pt;
+        line-height: 1.5;
+        color: #22262e;
+    }
+
+    h1, h2, h3, h4 {
+        font-family: freesans;
+        color: #1b263b;
+    }
+
+    h1 {
+        font-size: 30pt;
+        line-height: 1.1;
+        margin-top: 0;
+        margin-bottom: 4pt;
+    }
+
+    h2 {
+        font-size: 16pt;
+        margin-top: 20pt;
+        margin-bottom: 6pt;
+        padding-bottom: 3pt;
+        border-bottom: 0.5pt solid #d5d0c5;
+    }
+
+    h3 {
+        font-size: 12.5pt;
+        margin-top: 14pt;
+        margin-bottom: 4pt;
+        color: #c96442;
+    }
+
+    h4 {
+        font-size: 10pt;
+        margin-top: 12pt;
+        margin-bottom: 4pt;
+        text-transform: uppercase;
+        letter-spacing: 1pt;
+        color: #6e7687;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 9pt;
+    }
+
+    a {
+        color: #c96442;
+        text-decoration: none;
+    }
+
+    del {
+        color: #8a8f9c;
+    }
+
+    hr {
+        color: #c96442;
+        height: 1pt;
+        width: 30%;
+        margin-top: 14pt;
+        margin-bottom: 14pt;
+    }
+
+    ul, ol {
+        margin-top: 0;
+        margin-bottom: 9pt;
+    }
+
+    li {
+        margin-bottom: 3pt;
+    }
+
+    /* Chapter openers */
+
     .chapter-beginning {
         page-break-before: always;
     }
 
-    pre {
-        background: #f3f3f3;
-        padding: 8pt;
-        border: 1pt solid #ddd;
+    .chapter-label {
+        font-family: freesans;
+        font-size: 9pt;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2pt;
+        color: #c96442;
+        margin-bottom: 6pt;
     }
 
-    .credits-box {
-        margin-top: 2em;
-        padding: 8pt;
-        border-top: 1pt solid #999;
+    .chapter-subtitle {
+        font-family: freesans;
+        font-size: 12pt;
+        color: #6e7687;
+        padding-bottom: 12pt;
+        margin-bottom: 18pt;
+        border-bottom: 2pt solid #1b263b;
+    }
+
+    .lead {
+        font-size: 13.5pt;
+        line-height: 1.45;
+        color: #1b263b;
+    }
+
+    /* Code */
+
+    code {
+        font-family: dejavusansmono;
+        font-size: 9pt;
+        color: #a23b1e;
+        background-color: #f4f1ea;
+    }
+
+    pre {
+        font-family: dejavusansmono;
+        font-size: 8.5pt;
+        line-height: 1.45;
+        color: #e6e9ef;
+        background-color: #1b263b;
+        border-left: 3pt solid #c96442;
+        padding: 9pt 11pt 9pt 11pt;
+        margin-top: 0;
+        margin-bottom: 11pt;
+        page-break-inside: avoid;
+    }
+
+    pre code {
+        font-size: 8.5pt;
+        color: #e6e9ef;
+        background-color: transparent;
+    }
+
+    .hljs-comment, .hljs-quote {
+        color: #8b96ab;
+        font-style: italic;
+    }
+
+    .hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-meta {
+        color: #f0a37e;
+    }
+
+    .hljs-string, .hljs-attr, .hljs-attribute, .hljs-selector-class, .hljs-selector-id {
+        color: #a8d3a0;
+    }
+
+    .hljs-number, .hljs-variable, .hljs-template-variable {
+        color: #e8c77b;
+    }
+
+    .hljs-title, .hljs-name, .hljs-tag, .hljs-built_in, .hljs-function, .hljs-class {
+        color: #8fc3ea;
+    }
+
+    /* Tables */
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 12pt;
+        font-size: 10pt;
+    }
+
+    th {
+        font-family: freesans;
+        font-size: 9pt;
+        text-align: left;
+        color: #ffffff;
+        background-color: #1b263b;
+        padding: 6pt 8pt 6pt 8pt;
+    }
+
+    th code {
+        color: #ffffff;
+        background-color: transparent;
+    }
+
+    td {
+        padding: 5pt 8pt 5pt 8pt;
+        border-bottom: 0.5pt solid #d5d0c5;
+        vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+        background-color: #f7f4ee;
+    }
+
+    table.compact {
+        width: 60%;
+    }
+
+    table.compact td {
+        background-color: #ffffff;
+    }
+
+    table.split td {
+        width: 50%;
+        padding: 12pt;
+        border-bottom: 0;
+    }
+
+    td.split-left {
+        color: #ffffff;
+        background-color: #1b263b;
+    }
+
+    td.split-right {
+        color: #ffffff;
+        background-color: #c96442;
+    }
+
+    /* Images */
+
+    .figure {
+        width: 100%;
+    }
+
+    .caption {
+        font-family: freesans;
+        font-size: 9pt;
+        color: #6e7687;
         text-align: center;
+    }
+
+    /* Blockquotes and callouts */
+
+    blockquote {
+        margin: 0 0 11pt 0;
+        padding: 8pt 12pt 1pt 12pt;
+        border-left: 3pt solid #d5d0c5;
+        font-style: italic;
+        color: #4a5060;
+        page-break-inside: avoid;
+    }
+
+    blockquote.notice, blockquote.tip, blockquote.warning {
+        font-family: freesans;
+        font-size: 10pt;
+        font-style: normal;
+        color: #22262e;
+    }
+
+    blockquote.notice {
+        background-color: #eaf1fb;
+        border-left: 3pt solid #3f6fbf;
+    }
+
+    blockquote.notice strong {
+        color: #2a54a0;
+    }
+
+    blockquote.tip {
+        background-color: #eaf5ea;
+        border-left: 3pt solid #4c9a52;
+    }
+
+    blockquote.tip strong {
+        color: #2f7435;
+    }
+
+    blockquote.warning {
+        background-color: #fbecea;
+        border-left: 3pt solid #c9483f;
+    }
+
+    blockquote.warning strong {
+        color: #a52c24;
+    }
+
+    blockquote.pull-quote {
+        font-size: 16pt;
+        line-height: 1.35;
+        text-align: center;
+        color: #1b263b;
+        border-left: 0;
+        border-top: 1pt solid #c96442;
+        border-bottom: 1pt solid #c96442;
+        padding: 12pt 24pt 4pt 24pt;
+    }
+
+    .badge {
+        font-family: freesans;
+        font-size: 9pt;
+        color: #ffffff;
+        background-color: #c96442;
+    }
+
+    .button {
+        font-family: freesans;
+        font-size: 9pt;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #1b263b;
+    }
+
+    .boxed {
+        border: 1pt dashed #6e7687;
+        padding: 10pt 12pt 2pt 12pt;
+        margin-bottom: 11pt;
+    }
+
+    /* Footnotes */
+
+    .footnotes {
+        font-size: 9.5pt;
+        color: #4a5060;
+        margin-top: 18pt;
+    }
+
+    /* Table of contents */
+
+    #toc-header {
+        font-size: 26pt;
+        padding-bottom: 10pt;
+        margin-bottom: 14pt;
+        border-bottom: 2pt solid #1b263b;
+    }
+
+    div.mpdf_toc {
+        font-family: freesans;
+    }
+
+    a.mpdf_toc_a {
+        color: #22262e;
+        text-decoration: none;
+    }
+
+    div.mpdf_toc_level_0 {
+        font-size: 11.5pt;
+        font-weight: bold;
+        line-height: 1.4;
+        padding-top: 6pt;
+        color: #1b263b;
+    }
+
+    div.mpdf_toc_level_1 {
+        font-size: 10pt;
+        line-height: 1.5;
+        margin-left: 12pt;
+    }
+
+    div.mpdf_toc_level_2 {
+        font-size: 9pt;
+        line-height: 1.5;
+        margin-left: 24pt;
+        color: #6e7687;
+    }
+
+    /* Footer */
+
+    footer.footer {
+        font-family: freesans;
+        font-size: 8pt;
+        text-align: center;
+        color: #6e7687;
+        border-top: 0.5pt solid #d5d0c5;
+        padding-top: 4pt;
+    }
+
+    /* Page added by DemoObserver::coverAdded() */
+
+    .copyright-page {
+        font-family: freesans;
+        font-size: 9.5pt;
+        color: #6e7687;
+        padding-top: 150mm;
+    }
+
+    /* Credits observer */
+
+    .credits-box {
+        font-family: freesans;
+        font-size: 10pt;
+        text-align: center;
+        color: #6e7687;
+        margin-top: 30pt;
+        padding: 12pt;
+        border-top: 2pt solid #1b263b;
+        border-bottom: 0.5pt solid #d5d0c5;
+    }
+
+    /* Cover (theme/cover.html) */
+
+    .cover-background {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 210mm;
+        height: 297mm;
+        background-color: #1b263b;
+    }
+
+    .cover-stripe {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 14mm;
+        height: 297mm;
+        background-color: #c96442;
+    }
+
+    .cover-kicker {
+        position: absolute;
+        left: 34mm;
+        top: 62mm;
+        width: 150mm;
+        font-family: freesans;
+        font-size: 11pt;
+        font-weight: bold;
+        letter-spacing: 4pt;
+        color: #c96442;
+    }
+
+    .cover-title {
+        position: absolute;
+        left: 34mm;
+        top: 74mm;
+        width: 160mm;
+        font-family: freesans;
+        font-size: 54pt;
+        font-weight: bold;
+        line-height: 1.05;
+        color: #ffffff;
+    }
+
+    .cover-tagline {
+        position: absolute;
+        left: 34mm;
+        top: 132mm;
+        width: 140mm;
+        font-size: 15pt;
+        font-style: italic;
+        line-height: 1.4;
+        color: #cfd6e4;
+    }
+
+    .cover-author {
+        position: absolute;
+        left: 34mm;
+        top: 252mm;
+        width: 150mm;
+        font-family: freesans;
+        font-size: 14pt;
+        color: #ffffff;
+    }
+
+    .cover-note {
+        position: absolute;
+        left: 34mm;
+        top: 261mm;
+        width: 150mm;
+        font-family: dejavusansmono;
+        font-size: 8pt;
+        color: #8b96ab;
     }
 </style>

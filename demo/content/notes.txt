@@ -1,0 +1,1 @@
+This file must not appear in the PDF. Its extension is not in the markdown-extensions config.
