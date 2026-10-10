@@ -30,6 +30,9 @@ readonly class Config
 
     public string $tocHeader;
 
+    /** @var array<string, int> heading tag to TOC level, for example ['H1' => 0, 'H2' => 1] */
+    public array $tocLevels;
+
     public string $footer;
 
     /** @var list<string> */
@@ -48,6 +51,7 @@ readonly class Config
      *     'toc-enabled'?: bool,
      *     'toc-links'?: bool,
      *     'toc-header'?: string,
+     *     'toc-levels'?: list<string>,
      *     footer?: string,
      *     'markdown-extensions'?: list<string>,
      *     observers?: list<\Typesetterio\Typesetter\Contracts\Observer>,
@@ -65,6 +69,7 @@ readonly class Config
             'toc-enabled',
             'toc-links',
             'toc-header',
+            'toc-levels',
             'footer',
             'markdown-extensions',
             'observers',
@@ -96,6 +101,16 @@ readonly class Config
         $this->tocEnabled = (bool) ($config['toc-enabled'] ?? true);
         $this->tocLinks = (bool) ($config['toc-links'] ?? true);
         $this->tocHeader = $config['toc-header'] ?? 'Table of Contents';
+
+        $tocLevels = $config['toc-levels'] ?? ['H1', 'H2'];
+        if (
+            $tocLevels === []
+            || array_diff($tocLevels, ['H1', 'H2', 'H3', 'H4', 'H5', 'H6']) !== []
+            || count(array_unique($tocLevels)) !== count($tocLevels)
+        ) {
+            throw new InvalidConfigException('toc-levels must be a non-empty list of unique heading tags H1 to H6');
+        }
+        $this->tocLevels = array_flip($tocLevels);
 
         $this->footer = $config['footer'] ?? '{PAGENO}';
 

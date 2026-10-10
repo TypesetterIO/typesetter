@@ -11,6 +11,7 @@ use League\CommonMark\Environment\Environment;
 use Mpdf\Mpdf;
 use Typesetterio\Typesetter\Contracts\Chapter;
 use Typesetterio\Typesetter\Contracts\Observer;
+use Typesetterio\Typesetter\Exceptions\InvalidConfigException;
 
 /**
  * @implements IteratorAggregate<int, Observer>
@@ -18,12 +19,17 @@ use Typesetterio\Typesetter\Contracts\Observer;
 final class ObserverCollection implements Countable, IteratorAggregate
 {
     /** @var list<Observer> */
-    private array $observers;
+    private array $observers = [];
 
-    /** @param Observer[] $observers */
+    /** @param array<mixed> $observers */
     public function __construct(array $observers = [])
     {
-        $this->observers = array_values($observers);
+        foreach ($observers as $key => $value) {
+            if (!$value instanceof Observer) {
+                throw new InvalidConfigException(sprintf('observers[%s] must be an instance of %s, %s given', $key, Observer::class, get_debug_type($value)));
+            }
+            $this->observers[] = $value;
+        }
     }
 
     public function count(): int

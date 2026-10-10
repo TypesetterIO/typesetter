@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [1.0.0] - Unreleased
 
+### Added
+
+- `toc-levels` config key: the list of heading tags that build the TOC and the PDF outline, default `['H1', 'H2']`.
+
 ### Changed
 
 - `Config::$observers` is an `ObserverCollection` that implements `Countable` and `IteratorAggregate` and no longer extends Laravel's `Collection`.
@@ -20,6 +24,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Typesetter::listen()` with a class that does not implement `Event` throws `InvalidListenerException`.
 - `Config` throws `InvalidConfigException` for unknown keys, a missing `content-extra` directory, and `observers` entries that are not `Observer` instances.
 - `content-filter` accepts any callable, not only a `Closure`.
+- `content-extra` files are filtered by `markdown-extensions`; they still bypass `content-filter`.
+- `generate()` throws `InvalidConfigException` when no content files are found.
+- A missing or unreadable image, including `cover.jpg`, throws `Mpdf\MpdfImageException` instead of rendering a placeholder.
+- PDF outline bookmarks are written even when `toc-enabled` is `false`.
+- The TOC's outline entry uses `toc-header` instead of always reading `Contents`.
 
 ### Removed
 

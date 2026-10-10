@@ -45,6 +45,7 @@ class Typesetter
             'margin_right' => 27,
             'margin_bottom' => 14,
             'margin_top' => 14,
+            'showImageErrors' => true,
         ]);
         $mpdf->SetTitle($bookConfig->title);
         $mpdf->SetAuthor($bookConfig->author);
@@ -79,12 +80,13 @@ class Typesetter
 
         $bookConfig->observers->coverAdded($mpdf);
 
-        if ($bookConfig->tocEnabled) {
-            $tocLevels = ['H1' => 0, 'H2' => 1];
-            $mpdf->h2toc = $tocLevels;
-            $mpdf->h2bookmarks = $tocLevels;
+        $mpdf->h2bookmarks = $bookConfig->tocLevels;
 
-            $mpdfTocDefinition = '<tocpagebreak toc-bookmarkText="Contents" toc-page-selector="toc-page"';
+        if ($bookConfig->tocEnabled) {
+            $mpdf->h2toc = $bookConfig->tocLevels;
+
+            $tocBookmarkText = htmlspecialchars($bookConfig->tocHeader ?: 'Contents');
+            $mpdfTocDefinition = sprintf('<tocpagebreak toc-bookmarkText="%s" toc-page-selector="toc-page"', $tocBookmarkText);
             $mpdfTocDefinition .= sprintf(' links="%s"', $bookConfig->tocLinks ? 'on' : 'off');
             if ($tocHeader = $bookConfig->tocHeader) {
                 $mpdfTocDefinition .= sprintf(' toc-preHTML="%s"', htmlentities('<h1 id="toc-header">' . htmlspecialchars($tocHeader) . '</h1>'));
@@ -107,17 +109,22 @@ class Typesetter
             $bookConfig->content,
             FilesystemIterator::SKIP_DOTS
         )), false);
+        $hasMarkdownExtension = fn (SplFileInfo $file) => $file->isFile()
+            && in_array($file->getExtension(), $bookConfig->markdownExtensions, true);
         $contentFiles = array_values(array_filter(
             $contentFiles,
-            fn (SplFileInfo $file) => $file->isFile()
-                && in_array($file->getExtension(), $bookConfig->markdownExtensions, true)
-                && ($bookConfig->contentFilter)($file, $file->getFilename())
+            fn (SplFileInfo $file) => $hasMarkdownExtension($file) && ($bookConfig->contentFilter)($file, $file->getFilename())
         ));
         if ($bookConfig->contentExtra !== '') {
-            $contentFiles = array_merge($contentFiles, iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+            /** @var list<SplFileInfo> $extraFiles */
+            $extraFiles = iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 $bookConfig->contentExtra,
                 FilesystemIterator::SKIP_DOTS
-            )), false));
+            )), false);
+            $contentFiles = array_merge($contentFiles, array_values(array_filter($extraFiles, $hasMarkdownExtension)));
+        }
+        if ($contentFiles === []) {
+            throw new InvalidConfigException('No content files found in ' . $bookConfig->content);
         }
 
         $fileNameCounts = array_count_values(array_map(fn (SplFileInfo $file) => $file->getFilename(), $contentFiles));

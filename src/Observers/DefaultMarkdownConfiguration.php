@@ -8,6 +8,7 @@ use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Attributes\AttributesExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Extension\CommonMark\Node\Block\IndentedCode;
+use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use Spatie\CommonMarkHighlighter\FencedCodeRenderer;
 use Spatie\CommonMarkHighlighter\IndentedCodeRenderer;
 
@@ -24,5 +25,6 @@ class DefaultMarkdownConfiguration extends Observer
         $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer($this->languagesToProcess));
 
         $environment->addExtension(new AttributesExtension());
+        $environment->addExtension(new FrontMatterExtension());
     }
 }

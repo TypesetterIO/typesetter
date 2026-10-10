@@ -7,6 +7,7 @@ namespace Typesetterio\Typesetter;
 use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
 use League\CommonMark\Output\RenderedContentInterface;
 use Stringable;
+use UnexpectedValueException;
 
 final class Chapter implements Contracts\Chapter
 {
@@ -50,6 +51,15 @@ final class Chapter implements Contracts\Chapter
     /** @return array<string, mixed> */
     public function getMetaData(): array
     {
-        return $this->markdown instanceof RenderedContentWithFrontMatter ? $this->markdown->getFrontMatter() : [];
+        if (!$this->markdown instanceof RenderedContentWithFrontMatter) {
+            return [];
+        }
+
+        $frontMatter = $this->markdown->getFrontMatter();
+        if (!is_array($frontMatter)) {
+            throw new UnexpectedValueException('Front matter must be a YAML mapping');
+        }
+
+        return $frontMatter;
     }
 }

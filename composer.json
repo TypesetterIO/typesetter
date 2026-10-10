@@ -12,7 +12,8 @@
         "ext-mbstring": "*",
         "league/commonmark": "^2.4",
         "mpdf/mpdf": "^8.1",
-        "spatie/commonmark-highlighter": "^3.0"
+        "spatie/commonmark-highlighter": "^3.0",
+        "symfony/yaml": "^7.0 || ^8.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.0",

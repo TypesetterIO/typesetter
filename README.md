@@ -32,6 +32,7 @@ $config = new \Typesetterio\Typesetter\Config([
     'toc-enabled' => true,
     'toc-links' => true,
     'toc-header' => 'Table of Contents',
+    'toc-levels' => ['H1', 'H2'],
 
     'footer' => '{PAGENO}',
 
