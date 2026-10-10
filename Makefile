@@ -4,7 +4,7 @@ WORKFLOW = .github/workflows/ci.yml
 ACT_IMAGE = ubuntu-latest=shivammathur/node:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help install phpcs phpcs-fix phpstan test ci demo act
+.PHONY: help install phpcs phpcs-fix phpstan test coverage ci demo act
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-10s %s\n", $$1, $$2}'
@@ -23,6 +23,9 @@ phpstan: ## PHPStan
 
 test: ## PHPUnit
 	$(PHP) vendor/bin/phpunit
+
+coverage: ## HTML coverage report in coverage/ (needs Xdebug)
+	XDEBUG_MODE=coverage $(PHP) vendor/bin/phpunit --coverage-html coverage --path-coverage
 
 ci: phpcs phpstan test ## phpcs, phpstan, test in order
 

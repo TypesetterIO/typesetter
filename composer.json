@@ -39,6 +39,10 @@
         "phpcs-fix": "php-cs-fixer fix --show-progress=none",
         "phpstan": "phpstan",
         "test": "phpunit",
+        "coverage": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --coverage-html coverage --path-coverage"
+        ],
         "ci": [
             "@phpcs",
             "@phpstan",
@@ -50,6 +54,7 @@
         "phpcs-fix": "Fix coding standard with PHP CS Fixer",
         "phpstan": "Run PHPStan",
         "test": "Run the PHPUnit tests",
+        "coverage": "Write an HTML coverage report",
         "ci": "Run all CI tests"
     },
     "minimum-stability": "stable",
