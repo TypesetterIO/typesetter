@@ -6,8 +6,9 @@
     <img src="https://img.shields.io/packagist/dm/typesetterio/typesetter?labelColor=e7e5e4&color=292524" alt="Packagist">
     <img src="https://img.shields.io/github/actions/workflow/status/typesetterio/typesetter/ci.yml?labelColor=e7e5e4&color=292524" alt="GitHub Workflow Status">
 </p>
-
-# Typesetter
+<p align="center">
+    <a href="#demo"><img src=".github/assets/demo-pages.png" width="700" alt="Pages from the Typesetter demo book"></a>
+</p>
 
 This is the Typesetter main service. This can be used in your own projects directly if you want. You probably want to head over to [typesetter-cli](https://github.com/typesetterio/typesetter-cli) though.
 
