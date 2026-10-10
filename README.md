@@ -1,5 +1,5 @@
 <p align="center">
-    <img src=".github/assets/logo.png">
+    <img src=".github/assets/logo.png" alt="Typesetter">
 </p>
 <p align="center">
     <img src="https://img.shields.io/github/license/typesetterio/typesetter?labelColor=e7e5e4&color=292524" alt="License">
@@ -28,6 +28,7 @@ $config = new \Typesetterio\Typesetter\Config([
     'title' => 'Benjamin Button',
     'author' => 'F. Scott Fitzgerald',
     'theme' => 'bb',
+    'content' => 'content',
 
     'toc-enabled' => true,
     'toc-links' => true,
@@ -58,7 +59,7 @@ The `demo/` directory contains a runnable example used for manual smoke testing.
 
 ## Development
 
-Requires PHP 8.5, Composer, Docker, and [act](https://nektosact.com). On macOS, `brew install php composer act`.
+Requires PHP 8.3 or newer and Composer. `make act` additionally needs Docker and [act](https://nektosact.com). On macOS, `brew install php composer act`.
 
 Run `make` to list the available targets.
 
