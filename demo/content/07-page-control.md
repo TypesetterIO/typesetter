@@ -20,7 +20,7 @@ This section is on a new page because of the token on the previous page.
 
 The library creates every page with fixed margins: 27mm on the sides and 14mm at the top and bottom. Every page so far uses them.
 
-A theme changes margins with named pages. A CSS class is mapped to an `@page` rule with a name, and any block with that class moves to a page with those margins. The next three blocks do this.
+A theme changes margins with named pages. A CSS class is mapped to an `@page` rule with a name, and any block with that class moves to a page with those margins. The next three blocks do this. The `footer` from the config prints on all of them.
 
 <div class="wide-page">
 

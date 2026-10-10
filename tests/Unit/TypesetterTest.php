@@ -353,6 +353,63 @@ class TypesetterTest extends TestCase
         self::assertStringContainsString('(Contents & <i>more</i>)', $result);
     }
 
+    public function testFooterPrintsOnPagesUnderBarePageRule(): void
+    {
+        $result = (new Typesetter())->generate(new Config([
+            'theme' => __DIR__ . '/../data/bare-theme',
+            'content' => __DIR__ . '/../data/content',
+            'footer' => 'Foot {PAGENO}',
+            'observers' => [
+                new class extends Observer {
+                    public function pdfInitialized(Mpdf $mpdf): void
+                    {
+                        $mpdf->SetCompression(false);
+                        $mpdf->WriteHTML('<style>@page { margin: 20mm } @page toc-page { margin: 30mm } footer { font-family: chelvetica }</style>');
+                    }
+
+                    public function chapterParsed(Chapter $chapter): void
+                    {
+                        if (! $chapter->isFirstChapter()) {
+                            $chapter->setHtml('<pagebreak>' . $chapter->getHtml());
+                        }
+                    }
+                },
+            ],
+        ]));
+
+        self::assertStringNotContainsString('(Foot 2)', $result);
+        self::assertStringContainsString('(Foot 3)', $result);
+        self::assertStringContainsString('(Foot 4)', $result);
+    }
+
+    public function testFooterPrintsOnNamedPages(): void
+    {
+        $result = (new Typesetter())->generate(new Config([
+            'theme' => __DIR__ . '/../data/bare-theme',
+            'content' => __DIR__ . '/../data/content',
+            'footer' => 'Foot {PAGENO}',
+            'observers' => [
+                new class extends Observer {
+                    public function pdfInitialized(Mpdf $mpdf): void
+                    {
+                        $mpdf->SetCompression(false);
+                        $mpdf->WriteHTML('<style>@page wide { margin: 10mm } .wide { page: wide } footer { font-family: chelvetica }</style>');
+                    }
+
+                    public function chapterParsed(Chapter $chapter): void
+                    {
+                        if ($chapter->isLastChapter()) {
+                            $chapter->setHtml('<div class="wide">' . $chapter->getHtml() . '</div>');
+                        }
+                    }
+                },
+            ],
+        ]));
+
+        self::assertStringContainsString('(Foot 3)', $result);
+        self::assertStringContainsString('(Foot 4)', $result);
+    }
+
     /** @param list<string> $log */
     private function newRecordingTypesetter(array &$log): Typesetter
     {

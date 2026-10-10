@@ -99,6 +99,13 @@ class Typesetter
         if ($bookConfig->footer) {
             $footerDefinition = '<footer class="footer">' . htmlentities($bookConfig->footer) . '</footer>';
             $mpdf->SetHTMLFooter($footerDefinition);
+            $mpdf->DefHTMLFooterByName('typesetter-footer', $footerDefinition);
+            $mpdf->WriteHTML(
+                '<style>'
+                . '@page { odd-footer-name: html_typesetter-footer; even-footer-name: html_typesetter-footer; }'
+                . '@page toc-page { odd-footer-name: html_typesetter-no-footer; even-footer-name: html_typesetter-no-footer; }'
+                . '</style>',
+            );
             $this->dispatch(new Events\FooterGenerated());
         }
 

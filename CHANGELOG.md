@@ -44,5 +44,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - HTML5 tags no longer trigger PHP warnings in observers that rewrite chapter HTML.
 - A chapter containing only an HTML comment no longer crashes those observers.
 - `Finished` fires only when rendering succeeds.
+- The `footer` prints on pages styled by a theme `@page` rule, bare or named.
 - The generated cover's title and author, and the `toc-header` text, are HTML-escaped.
 - An unreadable `theme.html`, `cover.html`, or content file throws a `RuntimeException` naming the file.
