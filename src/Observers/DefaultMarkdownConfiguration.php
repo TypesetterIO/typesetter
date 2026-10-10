@@ -7,20 +7,14 @@ namespace Typesetterio\Typesetter\Observers;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Attributes\AttributesExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
-use League\CommonMark\Extension\CommonMark\Node\Block\IndentedCode;
 use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
-use Spatie\CommonMarkHighlighter\FencedCodeRenderer;
-use Spatie\CommonMarkHighlighter\IndentedCodeRenderer;
+use Tempest\Highlight\CommonMark\CodeBlockRenderer;
 
 class DefaultMarkdownConfiguration extends Observer
 {
-    /** @param list<string> $languagesToProcess */
-    public function __construct(protected array $languagesToProcess = ['html', 'php', 'js']) {}
-
     public function markdownEnvironmentInitialized(Environment $environment): void
     {
-        $environment->addRenderer(FencedCode::class, new FencedCodeRenderer($this->languagesToProcess));
-        $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer($this->languagesToProcess));
+        $environment->addRenderer(FencedCode::class, new CodeBlockRenderer());
 
         $environment->addExtension(new AttributesExtension());
         $environment->addExtension(new FrontMatterExtension());

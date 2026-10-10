@@ -30,9 +30,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - A missing or unreadable image, including `cover.jpg`, throws `Mpdf\MpdfImageException` instead of rendering a placeholder.
 - PDF outline bookmarks are written even when `toc-enabled` is `false`.
 - The TOC's outline entry uses `toc-header` instead of always reading `Contents`.
+- `DefaultMarkdownConfiguration` highlights code with `tempest/highlight` instead of `spatie/commonmark-highlighter`.
+- Fenced blocks with no language or an unknown language, and indented code blocks, are plain text.
 
 ### Removed
 
+- The `$languagesToProcess` constructor argument of `DefaultMarkdownConfiguration`.
 - The `illuminate/support` and `illuminate/collections` dependencies.
 
 ### Fixed

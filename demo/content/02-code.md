@@ -6,7 +6,7 @@ subtitle: Fenced blocks, indented blocks, and syntax colors
 This chapter starts on a new page. `FirstElementInChapterCssClass` put the `chapter-beginning` class on its first element, and the theme gives that class `page-break-before: always`.
 {.lead}
 
-`DefaultMarkdownConfiguration` wraps code tokens in `hljs-*` spans. The colors come from rules in `theme/theme.html`.
+`DefaultMarkdownConfiguration` highlights fenced blocks with `tempest/highlight`, which wraps code tokens in `hl-*` spans. The colors come from rules in `theme/theme.html`.
 
 ## Fenced blocks with a language
 
@@ -67,7 +67,7 @@ JSON:
 }
 ```
 
-Shell:
+Shell, which is highlighted on PHP 8.4 and later and plain text on PHP 8.3:
 
 ```bash
 composer require typesetterio/typesetter
@@ -76,7 +76,7 @@ php demo/run.php
 
 ## Fenced block without a language
 
-With no language named, the highlighter guesses from the list passed to `DefaultMarkdownConfiguration`. This book passes `html`, `php`, `js`, `css`, `json`, and `bash`.
+With no language named, or a language the highlighter does not know, the block is plain text.
 
 ```
 $total = array_sum([1, 2, 3]);
@@ -85,7 +85,7 @@ echo $total;
 
 ## Indented block
 
-Four spaces of indentation also make a code block:
+Four spaces of indentation also make a code block. It has no language, so it is plain text:
 
     function add(a, b) {
         return a + b;

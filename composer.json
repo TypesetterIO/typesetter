@@ -21,8 +21,8 @@
         "ext-mbstring": "*",
         "league/commonmark": "^2.4",
         "mpdf/mpdf": "^8.2.1",
-        "spatie/commonmark-highlighter": "^3.0",
-        "symfony/yaml": "^7.0 || ^8.0"
+        "symfony/yaml": "^7.0 || ^8.0",
+        "tempest/highlight": "^2.12"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95",

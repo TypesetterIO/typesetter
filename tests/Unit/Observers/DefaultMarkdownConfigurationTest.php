@@ -14,12 +14,23 @@ class DefaultMarkdownConfigurationTest extends TestCase
 {
     public function testFencedCodeIsHighlighted(): void
     {
-        self::assertStringContainsString('class="language-php hljs php"', (string) $this->convert("```php\n<?php echo 1;\n```"));
+        $html = (string) $this->convert("```php\n<?php echo 1;\n```");
+
+        self::assertStringContainsString('<pre data-lang="php" class="notranslate">', $html);
+        self::assertStringContainsString('<span class="hl-keyword">echo</span>', $html);
     }
 
-    public function testFencedCodeWithoutLanguageIsHighlighted(): void
+    public function testFencedCodeWithoutLanguageIsPlainText(): void
     {
-        self::assertStringContainsString('hljs', (string) $this->convert("```\nplain\n```"));
+        self::assertSame(
+            "<pre data-lang=\"txt\" class=\"notranslate\">echo &lt;b&gt;;\n</pre>\n",
+            (string) $this->convert("```\necho <b>;\n```"),
+        );
+    }
+
+    public function testInlineCodeIsNotHighlighted(): void
+    {
+        self::assertSame("<p><code>{php}echo 1;</code></p>\n", (string) $this->convert('`{php}echo 1;`'));
     }
 
     public function testAttributesAreApplied(): void

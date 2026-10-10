@@ -34,7 +34,7 @@ $config = new Config([
     'markdown-extensions' => ['md'],
 
     'observers' => [
-        new DefaultMarkdownConfiguration(['html', 'php', 'js', 'css', 'json', 'bash']),
+        new DefaultMarkdownConfiguration(),
         new DemoObserver(),
         new FirstElementInChapterCssClass(),
         new BreakToPageBreak(),
