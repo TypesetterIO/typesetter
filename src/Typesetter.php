@@ -140,6 +140,9 @@ class Typesetter
         foreach ($contentFiles as $contentFile) {
             $chapterNumber++;
 
+            if (!$contentFile->isReadable()) {
+                throw new RuntimeException('Unable to read ' . $contentFile->getPathname());
+            }
             $markdown = file_get_contents($contentFile->getPathname());
             if ($markdown === false) {
                 throw new RuntimeException('Unable to read ' . $contentFile->getPathname());

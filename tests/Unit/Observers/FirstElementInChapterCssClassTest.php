@@ -65,4 +65,26 @@ class FirstElementInChapterCssClassTest extends TestCase
 
         self::assertEquals('', $chapter->getHtml());
     }
+
+    public function testClassAddedToWrappingElement(): void
+    {
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter->setHtml('<section><h1>x</h1></section><p>y</p>');
+
+        $observer = new FirstElementInChapterCssClass();
+        $observer->chapterParsed($chapter);
+
+        self::assertEquals('<section class="chapter-beginning"><h1>x</h1></section><p>y</p>', trim($chapter->getHtml()));
+    }
+
+    public function testCommentOnlyChapterIsUnchanged(): void
+    {
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter->setHtml('<!-- todo -->');
+
+        $observer = new FirstElementInChapterCssClass();
+        $observer->chapterParsed($chapter);
+
+        self::assertEquals('<!-- todo -->', $chapter->getHtml());
+    }
 }
