@@ -87,4 +87,18 @@ class FirstElementInChapterCssClassTest extends TestCase
 
         self::assertEquals('<!-- todo -->', $chapter->getHtml());
     }
+
+    public function testTaskListCheckedStateSurvives(): void
+    {
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter->setHtml("<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> done</li>\n<li><input disabled=\"\" type=\"checkbox\"> todo</li>\n</ul>\n");
+
+        $observer = new FirstElementInChapterCssClass();
+        $observer->chapterParsed($chapter);
+
+        self::assertSame(
+            "<ul class=\"chapter-beginning\">\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> done</li>\n<li><input disabled=\"\" type=\"checkbox\"> todo</li>\n</ul>\n",
+            $chapter->getHtml(),
+        );
+    }
 }

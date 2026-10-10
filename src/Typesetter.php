@@ -55,22 +55,14 @@ class Typesetter
         $this->dispatch(new Events\PdfInitialized());
 
         $stylesheet = $bookConfig->theme . '/theme.html';
-        $themeHtml = file_get_contents($stylesheet);
-        if ($themeHtml === false) {
-            throw new RuntimeException('Unable to read ' . $stylesheet);
-        }
-        $mpdf->WriteHTML($themeHtml);
+        $mpdf->WriteHTML(file_get_contents($stylesheet)); // @phpstan-ignore argument.type (Config checked theme.html is readable)
         $this->dispatch(new Events\ThemeAdded());
 
         if (is_readable($bookConfig->theme . '/cover.jpg')) {
             $mpdf->Image($bookConfig->theme . '/cover.jpg', 0, 0, 210, 297, 'jpg', '', true, false);
             $this->dispatch(new Events\CoverImageAdded());
         } elseif (is_readable($bookConfig->theme . '/cover.html')) {
-            $coverHtml = file_get_contents($bookConfig->theme . '/cover.html');
-            if ($coverHtml === false) {
-                throw new RuntimeException('Unable to read ' . $bookConfig->theme . '/cover.html');
-            }
-            $mpdf->WriteHTML($coverHtml);
+            $mpdf->WriteHTML(file_get_contents($bookConfig->theme . '/cover.html')); // @phpstan-ignore argument.type (is_readable() checked above)
             $this->dispatch(new Events\CoverHtmlAdded());
         } else {
             $coverHtml = '<section style="text-align: center; page-break-after:always; padding-top: 100pt"><h1>%s</h1><h2>%s</h2></section>';
@@ -150,12 +142,8 @@ class Typesetter
             if (!$contentFile->isReadable()) {
                 throw new RuntimeException('Unable to read ' . $contentFile->getPathname());
             }
-            $markdown = file_get_contents($contentFile->getPathname());
-            if ($markdown === false) {
-                throw new RuntimeException('Unable to read ' . $contentFile->getPathname());
-            }
             $chapter = new Chapter(
-                markdown: $converter->convert($markdown),
+                markdown: $converter->convert(file_get_contents($contentFile->getPathname())), // @phpstan-ignore argument.type (isReadable() checked above)
                 chapterNumber: $chapterNumber,
                 totalChapters: $totalChapters,
             );

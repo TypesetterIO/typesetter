@@ -30,6 +30,11 @@ An ordered list:
 2. Write a theme
 3. Generate
 
+A task list:
+
+- [x] Write the Markdown
+- [ ] Proofread the PDF
+
 ## Blockquotes and rules
 
 > A plain blockquote. The theme gives it a left border and italic text.

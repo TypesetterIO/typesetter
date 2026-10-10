@@ -14,7 +14,7 @@ This is the Typesetter main service. This can be used in your own projects direc
 
 ## Install
 
-This requires PHP 8.3 or above.
+This requires PHP 8.4 or above.
 
 `composer require typesetterio/typesetter`
 
@@ -60,7 +60,7 @@ To learn more, please check out the [documentation](https://typesetter.io). This
 
 ## Development
 
-Requires PHP 8.3 or newer and Composer. `make act` additionally needs Docker and [act](https://nektosact.com). On macOS, `brew install php composer act`.
+Requires PHP 8.4 or newer and Composer. `make act` additionally needs Docker and [act](https://nektosact.com). On macOS, `brew install php composer act`.
 
 Run `make` to list the available targets.
 

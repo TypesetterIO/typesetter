@@ -4,31 +4,32 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Observers;
 
-use DOMDocument;
 use League\CommonMark\Output\RenderedContent;
+use Tests\Fixtures\HtmlDocumentObserver;
 use Tests\TestCase;
 use Typesetterio\Typesetter\Chapter;
-use Typesetterio\Typesetter\Observers\Observer;
 
 class ObserverTest extends TestCase
 {
-    public function testGetDomDocumentNonAsciiCharactersSurvive(): void
+    public function testGetHtmlDocumentNonAsciiCharactersSurvive(): void
     {
         $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 1);
         $chapter->setHtml('<p>café €100 — 日本語 🎉</p><p title="naïve">two</p>');
 
-        $observer = new class extends Observer {
-            public function dom(Chapter $chapter): DOMDocument
-            {
-                return $this->getDomDocument($chapter);
-            }
-        };
+        $document = (new HtmlDocumentObserver())->document($chapter);
 
-        $html = $observer->dom($chapter)->saveHTML();
-        self::assertIsString($html);
-        self::assertEquals(
-            '<p>café €100 — 日本語 🎉</p><p title="naïve">two</p>',
-            html_entity_decode(trim($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-        );
+        self::assertSame('<p>café €100 — 日本語 🎉</p><p title="naïve">two</p>', $document->body->innerHTML); // @phpstan-ignore property.nonObject (createFromString() always sets body)
+    }
+
+    public function testRoundTripKeepsBooleanAttributeValues(): void
+    {
+        $html = "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> done</li>\n</ul>\n";
+        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 1);
+        $chapter->setHtml($html);
+
+        $observer = new HtmlDocumentObserver();
+        $observer->write($chapter, $observer->document($chapter));
+
+        self::assertSame($html, $chapter->getHtml());
     }
 }

@@ -9,9 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `toc-levels` config key: the list of heading tags that build the TOC and the PDF outline, default `['H1', 'H2']`.
+- `Observer::setHtmlFromDocument()` writes a `Dom\HTMLDocument` body back to the chapter.
 
 ### Changed
 
+- Requires PHP 8.4.
+- Renamed `Observer::getDomDocument()` to `getHtmlDocument()`; it returns `Dom\HTMLDocument` and the chapter's elements are the body's children.
 - `Config::$observers` is an `ObserverCollection` that implements `Countable` and `IteratorAggregate` and no longer extends Laravel's `Collection`.
 - Renamed events: `PDFInitialized` to `PdfInitialized`, `PDFRendering` to `PdfRendering`, `TOCGenerated` to `TocGenerated`, `InitializedMarkdown` to `MarkdownInitialized`.
 - Renamed observer hooks: `initializedMarkdownEnvironment()` to `markdownEnvironmentInitialized()`, `initializedPdf()` to `pdfInitialized()`, `parsed()` to `chapterParsed()`.
@@ -30,13 +33,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - A missing or unreadable image, including `cover.jpg`, throws `Mpdf\MpdfImageException` instead of rendering a placeholder.
 - PDF outline bookmarks are written even when `toc-enabled` is `false`.
 - The TOC's outline entry uses `toc-header` instead of always reading `Contents`.
-- `DefaultMarkdownConfiguration` highlights code with `tempest/highlight` instead of `spatie/commonmark-highlighter`.
+- `DefaultMarkdownConfiguration` highlights code with `tempest/highlight` `^2.28.1` instead of `spatie/commonmark-highlighter`; Bash and TypeScript fences are highlighted.
 - Fenced blocks with no language or an unknown language, and indented code blocks, are plain text.
 
 ### Removed
 
 - The `$languagesToProcess` constructor argument of `DefaultMarkdownConfiguration`.
 - The `illuminate/support` and `illuminate/collections` dependencies.
+- The `ext-mbstring` requirement.
 
 ### Fixed
 
@@ -46,4 +50,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Finished` fires only when rendering succeeds.
 - The `footer` prints on pages styled by a theme `@page` rule, bare or named.
 - The generated cover's title and author, and the `toc-header` text, are HTML-escaped.
-- An unreadable `theme.html`, `cover.html`, or content file throws a `RuntimeException` naming the file.
+- An unreadable content file throws a `RuntimeException` naming the file.
+- Boolean attributes such as the `checked` of a task-list checkbox survive observers that rewrite chapter HTML; the boxes render checked in mPDF.

@@ -67,11 +67,22 @@ JSON:
 }
 ```
 
-Shell, which is highlighted on PHP 8.4 and later and plain text on PHP 8.3:
+Shell:
 
 ```bash
-composer require typesetterio/typesetter
-php demo/run.php
+export BOOK="Typesetter Demo Book"
+if [ -d content ]; then
+    php demo/run.php
+fi
+```
+
+TypeScript:
+
+```typescript
+const chapters: string[] = ['intro', 'body'];
+export function count(items: string[]): number {
+    return items.length;
+}
 ```
 
 ## Fenced block without a language

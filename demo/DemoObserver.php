@@ -39,19 +39,19 @@ class DemoObserver extends Observer
 
     public function chapterParsed(Chapter $chapter): void
     {
-        $dom = $this->getDomDocument($chapter);
-        $heading = $dom->getElementsByTagName('h1')->item(0);
+        $document = $this->getHtmlDocument($chapter);
+        $heading = $document->getElementsByTagName('h1')->item(0);
 
-        $label = $dom->createElement('p');
+        $label = $document->createElement('p');
         $label->textContent = sprintf('Chapter %d of %d', $chapter->getChapterNumber(), $chapter->getTotalChapters());
         $label->setAttribute('class', 'chapter-label');
-        $dom->insertBefore($label, $heading);
+        $heading->before($label); // @phpstan-ignore method.nonObject (every demo chapter has an h1)
 
-        $subtitle = $dom->createElement('p');
-        $subtitle->textContent = $chapter->getMetaData()['subtitle']; // @phpstan-ignore assign.propertyType
+        $subtitle = $document->createElement('p');
+        $subtitle->textContent = $chapter->getMetaData()['subtitle']; // @phpstan-ignore assign.propertyType (every demo chapter has a subtitle in its front matter)
         $subtitle->setAttribute('class', 'chapter-subtitle');
-        $dom->insertBefore($subtitle, $heading->nextSibling); // @phpstan-ignore property.nonObject
+        $heading->after($subtitle); // @phpstan-ignore method.nonObject (every demo chapter has an h1)
 
-        $chapter->setHtml($dom->saveHTML()); // @phpstan-ignore argument.type
+        $this->setHtmlFromDocument($chapter, $document);
     }
 }

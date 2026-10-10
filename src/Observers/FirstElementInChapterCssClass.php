@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Typesetterio\Typesetter\Observers;
 
-use DOMElement;
-use RuntimeException;
 use Typesetterio\Typesetter\Contracts\Chapter;
 
 class FirstElementInChapterCssClass extends Observer
@@ -15,22 +13,16 @@ class FirstElementInChapterCssClass extends Observer
     public function chapterParsed(Chapter $chapter): void
     {
         if ($this->skipFirst === false || !$chapter->isFirstChapter()) {
-            $dom = $this->getDomDocument($chapter);
+            $document = $this->getHtmlDocument($chapter);
 
-            $firstElement = $dom->firstChild;
-            if (!$firstElement instanceof DOMElement) {
+            $firstElement = $document->body->firstElementChild; // @phpstan-ignore property.nonObject (createFromString() always sets body)
+            if ($firstElement === null) {
                 return;
             }
 
-            $classes = array_filter(explode(' ', $firstElement->getAttribute('class')));
-            $classes[] = $this->class;
-            $firstElement->setAttribute('class', implode(' ', array_unique($classes)));
+            $firstElement->classList->add($this->class);
 
-            $html = $dom->saveHTML();
-            if ($html === false) {
-                throw new RuntimeException('Unable to serialize the chapter HTML');
-            }
-            $chapter->setHtml($html);
+            $this->setHtmlFromDocument($chapter, $document);
         }
     }
 }
