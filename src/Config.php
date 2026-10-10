@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Typesetterio\Typesetter;
 
 use Closure;
+use SplFileInfo;
 use Typesetterio\Typesetter\Exceptions\InvalidConfigException;
 use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
 
@@ -14,6 +15,7 @@ readonly class Config
 
     public string $content;
 
+    /** @var Closure(SplFileInfo, string): bool */
     public Closure $contentFilter;
 
     public string $contentExtra;
@@ -53,6 +55,24 @@ readonly class Config
      */
     public function __construct(array $config)
     {
+        $unknown = array_diff(array_keys($config), [
+            'theme',
+            'content',
+            'content-filter',
+            'content-extra',
+            'title',
+            'author',
+            'toc-enabled',
+            'toc-links',
+            'toc-header',
+            'footer',
+            'markdown-extensions',
+            'observers',
+        ]);
+        if ($unknown !== []) {
+            throw new InvalidConfigException('Unknown config key(s): ' . implode(', ', $unknown));
+        }
+
         $this->theme = $config['theme'] ?? '.';
         $themeHtmlFile = $this->theme . '/theme.html';
         if (!is_readable($themeHtmlFile)) {
@@ -63,9 +83,12 @@ readonly class Config
         if (!is_dir($this->content) || !is_readable($this->content)) {
             throw new InvalidConfigException('Unable to find a readable content directory: ' . $this->content);
         }
-        $this->contentFilter = $config['content-filter'] ?? fn() => true;
+        $this->contentFilter = Closure::fromCallable($config['content-filter'] ?? fn() => true);
 
         $this->contentExtra = $config['content-extra'] ?? '';
+        if ($this->contentExtra !== '' && (!is_dir($this->contentExtra) || !is_readable($this->contentExtra))) {
+            throw new InvalidConfigException('Unable to find a readable content-extra directory: ' . $this->contentExtra);
+        }
 
         $this->title = $config['title'] ?? 'My Typeset Book';
         $this->author = $config['author'] ?? 'Joey Bubblegum';

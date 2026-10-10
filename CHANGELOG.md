@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Config` is a `readonly` class.
 - `Chapter`, `ObserverCollection`, and every event class are `final`.
 - `Typesetter::listen()` with a class that does not implement `Event` throws `InvalidListenerException`.
+- `Config` throws `InvalidConfigException` for unknown keys, a missing `content-extra` directory, and `observers` entries that are not `Observer` instances.
+- `content-filter` accepts any callable, not only a `Closure`.
 
 ### Removed
 

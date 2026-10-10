@@ -113,7 +113,7 @@ class Typesetter
                 && in_array($file->getExtension(), $bookConfig->markdownExtensions, true)
                 && ($bookConfig->contentFilter)($file, $file->getFilename())
         ));
-        if (!empty($bookConfig->contentExtra)) {
+        if ($bookConfig->contentExtra !== '') {
             $contentFiles = array_merge($contentFiles, iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 $bookConfig->contentExtra,
                 FilesystemIterator::SKIP_DOTS
