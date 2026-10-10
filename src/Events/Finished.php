@@ -6,6 +6,4 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-final class Finished implements Event
-{
-}
+final class Finished implements Event {}

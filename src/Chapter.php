@@ -60,6 +60,14 @@ final class Chapter implements Contracts\Chapter
             throw new UnexpectedValueException('Front matter must be a YAML mapping');
         }
 
-        return $frontMatter;
+        $metaData = [];
+        foreach ($frontMatter as $key => $value) {
+            if (!is_string($key)) {
+                throw new UnexpectedValueException('Front matter must be a YAML mapping');
+            }
+            $metaData[$key] = $value;
+        }
+
+        return $metaData;
     }
 }

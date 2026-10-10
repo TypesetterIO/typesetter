@@ -3,5 +3,9 @@ parameters:
     paths:
         - src
         - tests
+        - demo
 
-    level: 5
+    level: 10
+
+    stubFiles:
+        - stubs/Mpdf.stub

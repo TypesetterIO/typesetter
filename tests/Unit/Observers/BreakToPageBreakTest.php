@@ -30,7 +30,7 @@ class BreakToPageBreakTest extends TestCase
         $observer->chapterParsed($chapter);
         self::assertEquals(
             '<p>one</p><p><div style="page-break-after:always"></div></p><div>two</div><div style="page-break-after:always"></div><p>three</p>',
-            $chapter->getHtml()
+            $chapter->getHtml(),
         );
     }
 
@@ -43,7 +43,7 @@ class BreakToPageBreakTest extends TestCase
         $observer->chapterParsed($chapter);
         self::assertEquals(
             '<p>one</p><p>{BREAK}</p><div>two</div><div style="page-break-after:always"></div><p>three</p>',
-            $chapter->getHtml()
+            $chapter->getHtml(),
         );
     }
 }

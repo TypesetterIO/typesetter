@@ -44,7 +44,7 @@ readonly class Config
      * @param array{
      *     theme?: string,
      *     content?: string,
-     *     'content-filter'?: callable,
+     *     'content-filter'?: callable(SplFileInfo, string): bool,
      *     'content-extra'?: string,
      *     title?: string,
      *     author?: string,

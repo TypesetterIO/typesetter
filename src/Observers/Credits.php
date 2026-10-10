@@ -8,9 +8,7 @@ use Typesetterio\Typesetter\Contracts\Chapter;
 
 class Credits extends Observer
 {
-    public function __construct(protected string $class = 'credits-box')
-    {
-    }
+    public function __construct(protected string $class = 'credits-box') {}
 
     public function chapterParsed(Chapter $chapter): void
     {

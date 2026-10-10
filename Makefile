@@ -4,7 +4,7 @@ WORKFLOW = .github/workflows/ci.yml
 ACT_IMAGE = ubuntu-latest=shivammathur/node:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help install phpcs phpstan test ci demo act
+.PHONY: help install phpcs phpcs-fix phpstan test ci demo act
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-10s %s\n", $$1, $$2}'
@@ -12,8 +12,11 @@ help: ## Show this help
 install: ## composer install
 	$(COMPOSER) install --no-progress --no-ansi --prefer-dist
 
-phpcs: ## PHP CodeSniffer
-	$(PHP) vendor/bin/phpcs -s
+phpcs: ## PHP CS Fixer check
+	$(PHP) vendor/bin/php-cs-fixer check --show-progress=none
+
+phpcs-fix: ## PHP CS Fixer fix
+	$(PHP) vendor/bin/php-cs-fixer fix --show-progress=none
 
 phpstan: ## PHPStan
 	$(PHP) vendor/bin/phpstan analyse

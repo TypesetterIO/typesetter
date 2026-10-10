@@ -11,21 +11,13 @@ use Typesetterio\Typesetter\Contracts\Chapter;
 
 abstract class Observer implements \Typesetterio\Typesetter\Contracts\Observer
 {
-    public function pdfInitialized(Mpdf $mpdf): void
-    {
-    }
+    public function pdfInitialized(Mpdf $mpdf): void {}
 
-    public function markdownEnvironmentInitialized(Environment $environment): void
-    {
-    }
+    public function markdownEnvironmentInitialized(Environment $environment): void {}
 
-    public function chapterParsed(Chapter $chapter): void
-    {
-    }
+    public function chapterParsed(Chapter $chapter): void {}
 
-    public function coverAdded(Mpdf $mpdf): void
-    {
-    }
+    public function coverAdded(Mpdf $mpdf): void {}
 
     /**
      * Get the DOMDocument for this chapter in the format of an HTML fragment.

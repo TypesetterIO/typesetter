@@ -51,7 +51,7 @@ jobs:
       - name: Composer audit
         run: composer audit --no-ansi --abandoned=report
 
-      - name: PHP CodeSniffer
+      - name: PHP CS Fixer
         run: composer phpcs
 
       - name: PHPStan

@@ -4,6 +4,7 @@
 /.gitattributes     export-ignore
 /.gitignore         export-ignore
 /Makefile           export-ignore
-/phpcs.xml          export-ignore
+/.php-cs-fixer.php  export-ignore
 /phpstan.neon       export-ignore
+/stubs              export-ignore
 /phpunit.xml        export-ignore

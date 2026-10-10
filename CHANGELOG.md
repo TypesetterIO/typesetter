@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Typesetter::listen()` with a class that does not implement `Event` throws `InvalidListenerException`.
 - `Config` throws `InvalidConfigException` for unknown keys, a missing `content-extra` directory, and `observers` entries that are not `Observer` instances.
 - `content-filter` accepts any callable, not only a `Closure`.
+- `Chapter::getMetaData()` throws `UnexpectedValueException` when the front matter is a YAML list or has non-string keys, not only when it is a scalar.
 - `content-extra` files are filtered by `markdown-extensions`; they still bypass `content-filter`.
 - `generate()` throws `InvalidConfigException` when no content files are found.
 - A missing or unreadable image, including `cover.jpg`, throws `Mpdf\MpdfImageException` instead of rendering a placeholder.

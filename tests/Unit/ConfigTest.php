@@ -97,7 +97,7 @@ class ConfigTest extends TestCase
         $config = new Config([
             'theme' => __DIR__ . '/../data/another-theme',
             'content' => __DIR__ . '/../data/content',
-            'content-filter' => fn (): bool => false,
+            'content-filter' => fn(): bool => false,
             'content-extra' => __DIR__ . '/../data/content-extra',
             'title' => 'The Title',
             'author' => 'The Author',
@@ -108,8 +108,7 @@ class ConfigTest extends TestCase
             'footer' => '',
             'markdown-extensions' => ['txt'],
             'observers' => [
-                new class extends Observer {
-                },
+                new class extends Observer {},
             ],
         ]);
 
@@ -144,7 +143,7 @@ class ConfigTest extends TestCase
         $config = new Config([
             'theme' => __DIR__ . '/../data/theme',
             'content' => __DIR__ . '/../data/content',
-            'content-filter' => 'is_file',
+            'content-filter' => 'Tests\Fixtures\AcceptAllContentFilter::filter',
         ]);
 
         self::assertInstanceOf(Closure::class, $config->contentFilter);

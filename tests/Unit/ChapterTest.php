@@ -36,6 +36,14 @@ class ChapterTest extends TestCase
         (new Chapter(new RenderedContentWithFrontMatter(new Document(), '<p>x</p>', 'hello'), 1, 1))->getMetaData();
     }
 
+    public function testSequenceFrontMatterThrowsException(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Front matter must be a YAML mapping');
+
+        (new Chapter(new RenderedContentWithFrontMatter(new Document(), '<p>x</p>', ['a', 'b']), 1, 1))->getMetaData();
+    }
+
     public function testGetHtmlIsTheRenderedContent(): void
     {
         $chapter = new Chapter(new RenderedContent(new Document(), '<p>x</p>'), 1, 1);

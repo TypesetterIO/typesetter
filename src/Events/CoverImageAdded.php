@@ -6,6 +6,4 @@ namespace Typesetterio\Typesetter\Events;
 
 use Typesetterio\Typesetter\Contracts\Event;
 
-final class CoverImageAdded implements Event
-{
-}
+final class CoverImageAdded implements Event {}

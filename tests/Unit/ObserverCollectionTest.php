@@ -19,9 +19,7 @@ class ObserverCollectionTest extends TestCase
     public function testMarkdownEnvironmentInitialized(): void
     {
         $ob1 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function markdownEnvironmentInitialized(Environment $environment): void
             {
@@ -30,9 +28,7 @@ class ObserverCollectionTest extends TestCase
         };
 
         $ob2 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function markdownEnvironmentInitialized(Environment $environment): void
             {
@@ -41,9 +37,7 @@ class ObserverCollectionTest extends TestCase
         };
 
         $ob3 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function markdownEnvironmentInitialized(Environment $environment): void
             {
@@ -61,9 +55,7 @@ class ObserverCollectionTest extends TestCase
     public function testChapterParsed(): void
     {
         $ob1 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function chapterParsed(Chapter $chapter): void
             {
@@ -72,9 +64,7 @@ class ObserverCollectionTest extends TestCase
         };
 
         $ob2 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function chapterParsed(Chapter $chapter): void
             {
@@ -83,9 +73,7 @@ class ObserverCollectionTest extends TestCase
         };
 
         $ob3 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function chapterParsed(Chapter $chapter): void
             {
@@ -103,9 +91,7 @@ class ObserverCollectionTest extends TestCase
     public function testPdfInitialized(): void
     {
         $ob1 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function pdfInitialized(Mpdf $mpdf): void
             {
@@ -125,9 +111,7 @@ class ObserverCollectionTest extends TestCase
     public function testCoverAdded(): void
     {
         $ob1 = new class extends Observer {
-            public function __construct(public bool $loaded = false)
-            {
-            }
+            public function __construct(public bool $loaded = false) {}
 
             public function coverAdded(Mpdf $mpdf): void
             {
@@ -150,8 +134,7 @@ class ObserverCollectionTest extends TestCase
         $this->expectExceptionMessage('observers[1] must be an instance of Typesetterio\Typesetter\Contracts\Observer, string given');
 
         new ObserverCollection([
-            new class extends Observer {
-            },
+            new class extends Observer {},
             'nope',
         ]);
     }

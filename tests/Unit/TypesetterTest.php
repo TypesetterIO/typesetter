@@ -389,9 +389,7 @@ class TypesetterTest extends TestCase
         };
 
         return new class ($record) extends Observer {
-            public function __construct(private readonly Closure $record)
-            {
-            }
+            public function __construct(private readonly Closure $record) {}
 
             public function markdownEnvironmentInitialized(Environment $environment): void
             {
@@ -416,7 +414,7 @@ class TypesetterTest extends TestCase
                     $chapter->getTotalChapters(),
                     $chapter->isFirstChapter(),
                     $chapter->isLastChapter(),
-                    trim($chapter->getHtml())
+                    trim($chapter->getHtml()),
                 ));
             }
         };

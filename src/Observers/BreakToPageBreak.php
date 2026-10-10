@@ -8,9 +8,7 @@ use Typesetterio\Typesetter\Contracts\Chapter;
 
 class BreakToPageBreak extends Observer
 {
-    public function __construct(protected string $token = '{BREAK}')
-    {
-    }
+    public function __construct(protected string $token = '{BREAK}') {}
 
     public function chapterParsed(Chapter $chapter): void
     {

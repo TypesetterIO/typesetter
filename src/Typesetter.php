@@ -107,19 +107,19 @@ class Typesetter
         /** @var list<SplFileInfo> $contentFiles */
         $contentFiles = iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
             $bookConfig->content,
-            FilesystemIterator::SKIP_DOTS
+            FilesystemIterator::SKIP_DOTS,
         )), false);
-        $hasMarkdownExtension = fn (SplFileInfo $file) => $file->isFile()
+        $hasMarkdownExtension = fn(SplFileInfo $file) => $file->isFile()
             && in_array($file->getExtension(), $bookConfig->markdownExtensions, true);
         $contentFiles = array_values(array_filter(
             $contentFiles,
-            fn (SplFileInfo $file) => $hasMarkdownExtension($file) && ($bookConfig->contentFilter)($file, $file->getFilename())
+            fn(SplFileInfo $file) => $hasMarkdownExtension($file) && ($bookConfig->contentFilter)($file, $file->getFilename()),
         ));
         if ($bookConfig->contentExtra !== '') {
             /** @var list<SplFileInfo> $extraFiles */
             $extraFiles = iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 $bookConfig->contentExtra,
-                FilesystemIterator::SKIP_DOTS
+                FilesystemIterator::SKIP_DOTS,
             )), false);
             $contentFiles = array_merge($contentFiles, array_values(array_filter($extraFiles, $hasMarkdownExtension)));
         }
@@ -127,13 +127,13 @@ class Typesetter
             throw new InvalidConfigException('No content files found in ' . $bookConfig->content);
         }
 
-        $fileNameCounts = array_count_values(array_map(fn (SplFileInfo $file) => $file->getFilename(), $contentFiles));
-        $duplicates = array_keys(array_filter($fileNameCounts, fn (int $count) => $count > 1));
+        $fileNameCounts = array_count_values(array_map(fn(SplFileInfo $file) => $file->getFilename(), $contentFiles));
+        $duplicates = array_keys(array_filter($fileNameCounts, fn(int $count) => $count > 1));
         if ($duplicates !== []) {
             throw new InvalidConfigException('Duplicate content file names: ' . implode(', ', $duplicates));
         }
 
-        usort($contentFiles, fn (SplFileInfo $a, SplFileInfo $b) => strcmp($a->getFilename(), $b->getFilename()));
+        usort($contentFiles, fn(SplFileInfo $a, SplFileInfo $b) => strcmp($a->getFilename(), $b->getFilename()));
 
         $totalChapters = count($contentFiles);
         $chapterNumber = 0;
@@ -150,7 +150,7 @@ class Typesetter
             $chapter = new Chapter(
                 markdown: $converter->convert($markdown),
                 chapterNumber: $chapterNumber,
-                totalChapters: $totalChapters
+                totalChapters: $totalChapters,
             );
 
             $bookConfig->observers->chapterParsed($chapter);

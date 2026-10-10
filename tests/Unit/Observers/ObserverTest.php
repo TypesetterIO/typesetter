@@ -24,9 +24,11 @@ class ObserverTest extends TestCase
             }
         };
 
+        $html = $observer->dom($chapter)->saveHTML();
+        self::assertIsString($html);
         self::assertEquals(
             '<p>café €100 — 日本語 🎉</p><p title="naïve">two</p>',
-            html_entity_decode(trim($observer->dom($chapter)->saveHTML()), ENT_QUOTES | ENT_HTML5, 'UTF-8')
+            html_entity_decode(trim($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
         );
     }
 }
