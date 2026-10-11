@@ -9,6 +9,7 @@ use League\CommonMark\Environment\Environment;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
 use Mpdf\MpdfImageException;
+use org\bovigo\vfs\vfsStream;
 use RuntimeException;
 use SplFileInfo;
 use Tests\TestCase;
@@ -266,29 +267,16 @@ class TypesetterTest extends TestCase
 
     public function testUnreadableContentFileThrowsException(): void
     {
-        $directory = sys_get_temp_dir() . '/typesetter-' . uniqid();
-        $file = $directory . '/01.md';
-        mkdir($directory);
-        copy(__DIR__ . '/../data/content/01.md', $file);
-        chmod($file, 0);
+        $content = vfsStream::setup('content');
+        vfsStream::newFile('01.md', 0000)->at($content)->setContent('# Chapter');
 
-        try {
-            if (is_readable($file)) {
-                self::markTestSkipped('chmod 000 does not make the file unreadable for this user');
-            }
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('Unable to read vfs://content/01.md');
 
-            $this->expectException(RuntimeException::class);
-            $this->expectExceptionMessageIs('Unable to read ' . $file);
-
-            (new Typesetter())->generate(new Config([
-                'theme' => __DIR__ . '/../data/theme',
-                'content' => $directory,
-            ]));
-        } finally {
-            chmod($file, 0644);
-            unlink($file);
-            rmdir($directory);
-        }
+        (new Typesetter())->generate(new Config([
+            'theme' => __DIR__ . '/../data/theme',
+            'content' => $content->url(),
+        ]));
     }
 
     public function testBrokenImageThrowsException(): void
@@ -412,9 +400,6 @@ class TypesetterTest extends TestCase
 
     public function testCustomFontIsEmbedded(): void
     {
-        $fontDir = sys_get_temp_dir() . '/typesetter-fonts-' . uniqid();
-        mkdir($fontDir);
-        copy(__DIR__ . '/../../vendor/mpdf/mpdf/ttfonts/DejaVuSansMono.ttf', $fontDir . '/custom.ttf');
         $useCustomFont = new class extends Observer {
             public function pdfInitialized(Mpdf $mpdf): void
             {
@@ -422,28 +407,23 @@ class TypesetterTest extends TestCase
             }
         };
 
-        try {
-            $withoutFont = (new Typesetter())->generate(new Config([
-                'theme' => __DIR__ . '/../data/bare-theme',
-                'content' => __DIR__ . '/../data/content',
-                'observers' => [$useCustomFont],
-            ]));
-            $withFont = (new Typesetter())->generate(new Config([
-                'theme' => __DIR__ . '/../data/bare-theme',
-                'content' => __DIR__ . '/../data/content',
-                'mpdf' => [
-                    'fontDir' => $fontDir,
-                    'fontdata' => ['customfont' => ['R' => 'custom.ttf']],
-                ],
-                'observers' => [$useCustomFont],
-            ]));
-        } finally {
-            unlink($fontDir . '/custom.ttf');
-            rmdir($fontDir);
-        }
+        $withoutFont = (new Typesetter())->generate(new Config([
+            'theme' => __DIR__ . '/../data/bare-theme',
+            'content' => __DIR__ . '/../data/content',
+            'observers' => [$useCustomFont],
+        ]));
+        $withFont = (new Typesetter())->generate(new Config([
+            'theme' => __DIR__ . '/../data/bare-theme',
+            'content' => __DIR__ . '/../data/content',
+            'mpdf' => [
+                'fontDir' => __DIR__ . '/../../demo/theme/fonts',
+                'fontdata' => ['customfont' => ['R' => 'IBMPlexSerif-Regular.ttf']],
+            ],
+            'observers' => [$useCustomFont],
+        ]));
 
-        self::assertStringNotContainsString('DejaVuSansMono', $withoutFont);
-        self::assertStringContainsString('DejaVuSansMono', $withFont);
+        self::assertStringNotContainsString('IBMPlexSerif', $withoutFont);
+        self::assertStringContainsString('IBMPlexSerif', $withFont);
     }
 
     public function testTocAttributesRestartPageNumbering(): void
