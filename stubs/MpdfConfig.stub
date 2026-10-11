@@ -1,0 +1,19 @@
+<?php
+
+namespace Mpdf\Config;
+
+class ConfigVariables
+{
+    /** @return array{fontDir: list<string>, ...<string, mixed>} */
+    public function getDefaults()
+    {
+    }
+}
+
+class FontVariables
+{
+    /** @return array{fontdata: array<string, array<string, mixed>>, ...<string, mixed>} */
+    public function getDefaults()
+    {
+    }
+}

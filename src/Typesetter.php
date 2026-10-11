@@ -39,14 +39,7 @@ class Typesetter
 
         $this->dispatch(new Events\MarkdownInitialized());
 
-        $mpdf = new Mpdf([
-            'mode' => 'utf-8',
-            'margin_left' => 27,
-            'margin_right' => 27,
-            'margin_bottom' => 14,
-            'margin_top' => 14,
-            'showImageErrors' => true,
-        ]);
+        $mpdf = new Mpdf($bookConfig->mpdf);
         $mpdf->SetTitle($bookConfig->title);
         $mpdf->SetAuthor($bookConfig->author);
 
@@ -77,14 +70,31 @@ class Typesetter
         if ($bookConfig->tocEnabled) {
             $mpdf->h2toc = $bookConfig->tocLevels;
 
-            $tocBookmarkText = htmlspecialchars($bookConfig->tocHeader ?: 'Contents');
-            $mpdfTocDefinition = sprintf('<tocpagebreak toc-bookmarkText="%s" toc-page-selector="toc-page"', $tocBookmarkText);
-            $mpdfTocDefinition .= sprintf(' links="%s"', $bookConfig->tocLinks ? 'on' : 'off');
-            if ($tocHeader = $bookConfig->tocHeader) {
-                $mpdfTocDefinition .= sprintf(' toc-preHTML="%s"', htmlentities('<h1 id="toc-header">' . htmlspecialchars($tocHeader) . '</h1>'));
+            $tocAttributes = [
+                'toc-bookmarkText' => $bookConfig->tocHeader ?: 'Contents',
+                'toc-page-selector' => 'toc-page',
+                'links' => $bookConfig->tocLinks ? 'on' : 'off',
+            ];
+            if ($bookConfig->tocHeader !== '') {
+                $tocAttributes['toc-preHTML'] = '<h1 id="toc-header">' . htmlspecialchars($bookConfig->tocHeader) . '</h1>';
+            }
+            $mpdfTocDefinition = '<tocpagebreak';
+            foreach ([...$tocAttributes, ...$bookConfig->tocAttributes] as $name => $value) {
+                $mpdfTocDefinition .= sprintf(' %s="%s"', $name, htmlspecialchars((string) $value));
             }
             $mpdfTocDefinition .= '>';
             $mpdf->WriteHTML($mpdfTocDefinition);
+
+            $numbering = array_intersect_key($bookConfig->tocAttributes, ['resetpagenum' => 0, 'pagenumstyle' => 0, 'suppress' => 0]);
+            if ($numbering !== []) {
+                // mPDF drops these attributes when the TOC starts on an already blank page, which a cover ending in a page break causes
+                $mpdf->PageNumSubstitutions[] = [
+                    'from' => $mpdf->page,
+                    'reset' => $numbering['resetpagenum'] ?? '',
+                    'type' => $numbering['pagenumstyle'] ?? '',
+                    'suppress' => $numbering['suppress'] ?? '',
+                ];
+            }
             $this->dispatch(new Events\TocGenerated());
         }
 

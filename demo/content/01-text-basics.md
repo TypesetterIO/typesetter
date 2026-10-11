@@ -12,6 +12,8 @@ The "Chapter 1 of 8" label above the heading and the subtitle below it are not i
 
 Body text can be *emphasized*, **strong**, or ***both***. It can carry `inline code`, ~~strikethrough~~, and a [link to typesetter.io](https://typesetter.io). A bare URL such as https://github.com/TypesetterIO becomes a link on its own.
 
+The body text is IBM Plex Serif, a font mPDF does not ship. `demo/run.php` points the `mpdf` config key at the four TTF files in `theme/fonts`, and the theme's `body` rule names the family `ibmplexserif`. The emphasized, strong, and bold italic words above each come from a different one of those files.
+
 Non-ASCII text survives the trip: café, naïve, Zürich, “curly quotes”, an ellipsis…, and symbols like © and €.
 
 ## Lists

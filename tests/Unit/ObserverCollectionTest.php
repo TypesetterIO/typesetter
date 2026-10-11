@@ -131,7 +131,7 @@ class ObserverCollectionTest extends TestCase
     public function testNonObserverThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('observers[1] must be an instance of Typesetterio\Typesetter\Contracts\Observer, string given');
+        $this->expectExceptionMessageIs('observers[1] must be an instance of Typesetterio\Typesetter\Contracts\Observer, string given');
 
         new ObserverCollection([
             new class extends Observer {},

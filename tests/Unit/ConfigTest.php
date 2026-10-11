@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use Closure;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SplFileInfo;
 use Tests\TestCase;
@@ -31,7 +33,7 @@ class ConfigTest extends TestCase
     public function testMissingThemeFileThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Missing theme.html: ./not-found/theme.html');
+        $this->expectExceptionMessageIs('Missing theme.html: ./not-found/theme.html');
 
         new Config(['theme' => './not-found']);
     }
@@ -39,7 +41,7 @@ class ConfigTest extends TestCase
     public function testMissingContentDirectoryThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Unable to find a readable content directory: ./not-found');
+        $this->expectExceptionMessageIs('Unable to find a readable content directory: ./not-found');
 
         chdir(__DIR__ . '/../data/theme');
 
@@ -49,7 +51,7 @@ class ConfigTest extends TestCase
     public function testMissingContentExtraDirectoryThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Unable to find a readable content-extra directory: ./nope');
+        $this->expectExceptionMessageIs('Unable to find a readable content-extra directory: ./nope');
 
         new Config([
             'theme' => __DIR__ . '/../data/theme',
@@ -61,7 +63,7 @@ class ConfigTest extends TestCase
     public function testUnknownKeyThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Unknown config key(s): nope');
+        $this->expectExceptionMessageIs('Unknown config key(s): nope');
 
         new Config([
             'theme' => __DIR__ . '/../data/theme',
@@ -86,7 +88,16 @@ class ConfigTest extends TestCase
         self::assertTrue($config->tocLinks);
         self::assertEquals('Table of Contents', $config->tocHeader);
         self::assertSame(['H1' => 0, 'H2' => 1], $config->tocLevels);
+        self::assertSame([], $config->tocAttributes);
         self::assertEquals('{PAGENO}', $config->footer);
+        self::assertSame([
+            'mode' => 'utf-8',
+            'margin_left' => 27,
+            'margin_right' => 27,
+            'margin_bottom' => 14,
+            'margin_top' => 14,
+            'showImageErrors' => true,
+        ], $config->mpdf);
         self::assertEquals(['md', 'markdown'], $config->markdownExtensions);
         self::assertCount(1, $config->observers);
         self::assertContainsOnlyInstancesOf(DefaultMarkdownConfiguration::class, $config->observers);
@@ -105,7 +116,9 @@ class ConfigTest extends TestCase
             'toc-links' => false,
             'toc-header' => 'ToC for Me',
             'toc-levels' => ['H1', 'H2', 'H3'],
+            'toc-attributes' => ['resetpagenum' => 1, 'paging' => 'off'],
             'footer' => '',
+            'mpdf' => ['format' => 'A5', 'margin_left' => 10],
             'markdown-extensions' => ['txt'],
             'observers' => [
                 new class extends Observer {},
@@ -122,9 +135,66 @@ class ConfigTest extends TestCase
         self::assertFalse($config->tocLinks);
         self::assertEquals('ToC for Me', $config->tocHeader);
         self::assertSame(['H1' => 0, 'H2' => 1, 'H3' => 2], $config->tocLevels);
+        self::assertSame(['resetpagenum' => 1, 'paging' => 'off'], $config->tocAttributes);
         self::assertEquals('', $config->footer);
+        self::assertSame([
+            'mode' => 'utf-8',
+            'margin_left' => 10,
+            'margin_right' => 27,
+            'margin_bottom' => 14,
+            'margin_top' => 14,
+            'showImageErrors' => true,
+            'format' => 'A5',
+        ], $config->mpdf);
         self::assertEquals(['txt'], $config->markdownExtensions);
         self::assertCount(1, $config->observers);
+    }
+
+    public function testMpdfFontsExtendTheBundledFonts(): void
+    {
+        $config = new Config([
+            'theme' => __DIR__ . '/../data/theme',
+            'content' => __DIR__ . '/../data/content',
+            'mpdf' => [
+                'fontDir' => ['my-theme/fonts'],
+                'fontdata' => [
+                    'custom' => ['R' => 'custom.ttf'],
+                    'dejavusans' => ['R' => 'replaced.ttf'],
+                ],
+            ],
+        ]);
+
+        $bundledFontDir = (new ConfigVariables())->getDefaults()['fontDir'];
+        $bundledFontdata = (new FontVariables())->getDefaults()['fontdata'];
+        self::assertSame([...$bundledFontDir, 'my-theme/fonts'], $config->mpdf['fontDir']);
+        self::assertSame(
+            ['custom' => ['R' => 'custom.ttf'], 'dejavusans' => ['R' => 'replaced.ttf']] + $bundledFontdata,
+            $config->mpdf['fontdata'],
+        );
+    }
+
+    public function testMpdfFontDirAcceptsASingleDirectory(): void
+    {
+        $config = new Config([
+            'theme' => __DIR__ . '/../data/theme',
+            'content' => __DIR__ . '/../data/content',
+            'mpdf' => ['fontDir' => 'my-theme/fonts'],
+        ]);
+
+        $bundledFontDir = (new ConfigVariables())->getDefaults()['fontDir'];
+        self::assertSame([...$bundledFontDir, 'my-theme/fonts'], $config->mpdf['fontDir']);
+    }
+
+    public function testUnknownMpdfOptionThrowsException(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessageIs('Unknown mpdf option(s): fontdir, Format');
+
+        new Config([
+            'theme' => __DIR__ . '/../data/theme',
+            'content' => __DIR__ . '/../data/content',
+            'mpdf' => ['fontdir' => 'fonts', 'Format' => 'A5', 'tempDir' => '/tmp'],
+        ]);
     }
 
     public function testNoObservers(): void
@@ -164,7 +234,7 @@ class ConfigTest extends TestCase
     public function testInvalidTocLevelsThrowsException(array $tocLevels): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('toc-levels must be a non-empty list of unique heading tags H1 to H6');
+        $this->expectExceptionMessageIs('toc-levels must be a non-empty list of unique heading tags H1 to H6');
 
         new Config([
             'theme' => __DIR__ . '/../data/theme',

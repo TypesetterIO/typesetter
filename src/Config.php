@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Typesetterio\Typesetter;
 
 use Closure;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
 use SplFileInfo;
 use Typesetterio\Typesetter\Exceptions\InvalidConfigException;
 use Typesetterio\Typesetter\Observers\DefaultMarkdownConfiguration;
@@ -33,7 +35,13 @@ readonly class Config
     /** @var array<string, int> heading tag to TOC level, for example ['H1' => 0, 'H2' => 1] */
     public array $tocLevels;
 
+    /** @var array<string, string|int> attributes merged over the library's <tocpagebreak> attributes */
+    public array $tocAttributes;
+
     public string $footer;
+
+    /** @var array<string, mixed> options for the mPDF constructor */
+    public array $mpdf;
 
     /** @var list<string> */
     public array $markdownExtensions;
@@ -52,7 +60,9 @@ readonly class Config
      *     'toc-links'?: bool,
      *     'toc-header'?: string,
      *     'toc-levels'?: list<string>,
+     *     'toc-attributes'?: array<string, string|int>,
      *     footer?: string,
+     *     mpdf?: array{fontDir?: string|list<string>, fontdata?: array<string, array<string, mixed>>, ...<string, mixed>},
      *     'markdown-extensions'?: list<string>,
      *     observers?: list<\Typesetterio\Typesetter\Contracts\Observer>,
      * } $config
@@ -70,7 +80,9 @@ readonly class Config
             'toc-links',
             'toc-header',
             'toc-levels',
+            'toc-attributes',
             'footer',
+            'mpdf',
             'markdown-extensions',
             'observers',
         ]);
@@ -112,7 +124,38 @@ readonly class Config
         }
         $this->tocLevels = array_flip($tocLevels);
 
+        $this->tocAttributes = $config['toc-attributes'] ?? [];
+
         $this->footer = $config['footer'] ?? '{PAGENO}';
+
+        $mpdfOptions = $config['mpdf'] ?? [];
+        $mpdfDefaults = (new ConfigVariables())->getDefaults();
+        $mpdfFontDefaults = (new FontVariables())->getDefaults();
+        $unknownOptions = array_diff(
+            array_keys($mpdfOptions),
+            // read by Mpdf::initConstructorParams(), not part of ConfigVariables
+            ['mode', 'format', 'orientation', 'default_font', 'default_font_size', 'margin_left', 'margin_right', 'margin_top', 'margin_bottom', 'margin_header', 'margin_footer'],
+            array_keys($mpdfDefaults),
+            array_keys($mpdfFontDefaults),
+        );
+        if ($unknownOptions !== []) {
+            throw new InvalidConfigException('Unknown mpdf option(s): ' . implode(', ', $unknownOptions));
+        }
+        if (isset($mpdfOptions['fontDir'])) {
+            $mpdfOptions['fontDir'] = [...$mpdfDefaults['fontDir'], ...(array) $mpdfOptions['fontDir']];
+        }
+        if (isset($mpdfOptions['fontdata'])) {
+            $mpdfOptions['fontdata'] += $mpdfFontDefaults['fontdata'];
+        }
+        $this->mpdf = [
+            'mode' => 'utf-8',
+            'margin_left' => 27,
+            'margin_right' => 27,
+            'margin_bottom' => 14,
+            'margin_top' => 14,
+            'showImageErrors' => true,
+            ...$mpdfOptions,
+        ];
 
         $this->markdownExtensions = $config['markdown-extensions'] ?? ['md', 'markdown'];
 

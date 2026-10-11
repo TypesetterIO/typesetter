@@ -4,6 +4,12 @@ namespace Mpdf;
 
 class Mpdf
 {
+    /** @var int */
+    public $page;
+
+    /** @var list<array{from: int, reset: string|int, type: string|int, suppress: string|int}> */
+    public $PageNumSubstitutions;
+
     /** @return string */
     public function OutputBinaryData()
     {

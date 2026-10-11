@@ -18,7 +18,7 @@ This section is on a new page because of the token on the previous page.
 
 ## Margins
 
-The library creates every page with fixed margins: 27mm on the sides and 14mm at the top and bottom. Every page so far uses them.
+The library creates every page with default margins: 27mm on the sides and 14mm at the top and bottom. The `mpdf` config key changes them for the whole book. Every page so far uses the defaults.
 
 A theme changes margins with named pages. A CSS class is mapped to an `@page` rule with a name, and any block with that class moves to a page with those margins. The next three blocks do this. The `footer` from the config prints on all of them.
 
@@ -64,5 +64,7 @@ This block has the class `standard-page`, mapped to `@page standard`, which repe
 ## The table of contents page
 
 The library gives the table of contents the page name `toc-page`. This theme's `@page toc-page` rule gives it wider side margins than the chapters.
+
+The `toc-attributes` config for this book is `['resetpagenum' => 1]`, so page numbering restarts after the table of contents and the first chapter's footer reads "1 of" the content page count.
 
 </div>

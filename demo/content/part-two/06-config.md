@@ -16,7 +16,9 @@ subtitle: What demo/run.php sets, and what it leaves out
 | `toc-links` | `true` | TOC entries are clickable |
 | `toc-header` | Demo Table of Contents | TOC heading and its outline entry |
 | `toc-levels` | H1, H2, H3 | TOC depth and the PDF outline |
+| `toc-attributes` | `['resetpagenum' => 1]` | The first chapter's footer reads "1 of" |
 | `footer` | Book title, then `{PAGENO} of {nbpg}` | Bottom of each content page |
+| `mpdf` | IBM Plex Serif from `theme/fonts` | All body text, chapter 1 explains |
 | `markdown-extensions` | `['md']` | See below |
 | `observers` | Four bundled plus `DemoObserver` | Chapter 5 |
 
@@ -45,6 +47,7 @@ These options conflict with ones the book uses, so they are left out:
 - `toc-links` set to `false`: TOC entries are plain text.
 - `toc-header` set to an empty string: no heading above the TOC.
 - `footer` set to an empty string: no footer.
+- `mpdf` page options such as `format`, `orientation`, or the margins: this book keeps the library defaults.
 - `theme/cover.jpg`: a full-page image cover. It wins over `cover.html` when both exist.
 - No cover file at all: a generated cover with the title and author.
 - `FirstElementInChapterCssClass` with `skipFirst: false`: the first chapter gets the class too.

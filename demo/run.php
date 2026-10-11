@@ -28,8 +28,21 @@ $config = new Config([
     'toc-links' => true,
     'toc-header' => 'Demo Table of Contents',
     'toc-levels' => ['H1', 'H2', 'H3'],
+    'toc-attributes' => ['resetpagenum' => 1],
 
     'footer' => 'Typesetter Demo Book  |  {PAGENO} of {nbpg}',
+
+    'mpdf' => [
+        'fontDir' => ['theme/fonts'],
+        'fontdata' => [
+            'ibmplexserif' => [
+                'R' => 'IBMPlexSerif-Regular.ttf',
+                'B' => 'IBMPlexSerif-Bold.ttf',
+                'I' => 'IBMPlexSerif-Italic.ttf',
+                'BI' => 'IBMPlexSerif-BoldItalic.ttf',
+            ],
+        ],
+    ],
 
     'markdown-extensions' => ['md'],
 

@@ -35,8 +35,16 @@ $config = new \Typesetterio\Typesetter\Config([
     'toc-links' => true,
     'toc-header' => 'Table of Contents',
     'toc-levels' => ['H1', 'H2'],
+    'toc-attributes' => ['resetpagenum' => 1],
 
     'footer' => '{PAGENO}',
+
+    'mpdf' => [
+        'fontDir' => ['bb/fonts'],
+        'fontdata' => [
+            'garamond' => ['R' => 'Garamond.ttf', 'B' => 'Garamond-Bold.ttf', 'I' => 'Garamond-Italic.ttf'],
+        ],
+    ],
 
     'markdown-extensions' => ['md', 'markdown'],
     'observers' => [
@@ -51,6 +59,8 @@ $service = new \Typesetterio\Typesetter\Typesetter();
 $pdfContent = $service->generate($config);
 file_put_contents('my-pdf.pdf', $pdfContent);
 ```
+
+`toc-attributes` takes any attribute of mPDF's `<tocpagebreak>` tag. `mpdf` takes any option of the mPDF constructor; `fontDir` and `fontdata` are added to mPDF's bundled fonts.
 
 To learn more, please check out the [documentation](https://typesetter.io). This details configuration, customization, themes and cover generation, observers, listeners and more.
 

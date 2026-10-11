@@ -37,7 +37,7 @@ class TypesetterTest extends TestCase
     public function testRegisterListenerNoImplementationsThrowsException(): void
     {
         $this->expectException(InvalidListenerException::class);
-        $this->expectExceptionMessage('not-a-class does not implement Typesetterio\Typesetter\Contracts\Event');
+        $this->expectExceptionMessageIs('not-a-class does not implement Typesetterio\Typesetter\Contracts\Event');
 
         (new Typesetter())->listen('not-a-class', function () {});
     }
@@ -45,7 +45,7 @@ class TypesetterTest extends TestCase
     public function testRegisterListenersNotImplementEventContractThrowsException(): void
     {
         $this->expectException(InvalidListenerException::class);
-        $this->expectExceptionMessage('Typesetterio\Typesetter\Observers\Observer does not implement Typesetterio\Typesetter\Contracts\Event');
+        $this->expectExceptionMessageIs('Typesetterio\Typesetter\Observers\Observer does not implement Typesetterio\Typesetter\Contracts\Event');
 
         (new Typesetter())->listen(Observer::class, function () {});
     }
@@ -53,7 +53,7 @@ class TypesetterTest extends TestCase
     public function testRegisterListenerForEventContractItselfThrowsException(): void
     {
         $this->expectException(InvalidListenerException::class);
-        $this->expectExceptionMessage('Typesetterio\Typesetter\Contracts\Event does not implement Typesetterio\Typesetter\Contracts\Event');
+        $this->expectExceptionMessageIs('Typesetterio\Typesetter\Contracts\Event does not implement Typesetterio\Typesetter\Contracts\Event');
 
         (new Typesetter())->listen(Event::class, function () {});
     }
@@ -233,7 +233,7 @@ class TypesetterTest extends TestCase
     public function testDuplicateContentFileNamesThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Duplicate content file names: 01.md');
+        $this->expectExceptionMessageIs('Duplicate content file names: 01.md');
 
         (new Typesetter())->generate(new Config([
             'theme' => __DIR__ . '/../data/theme',
@@ -244,7 +244,7 @@ class TypesetterTest extends TestCase
     public function testDuplicateContentExtraFileNameThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Duplicate content file names: 01.md');
+        $this->expectExceptionMessageIs('Duplicate content file names: 01.md');
 
         (new Typesetter())->generate(new Config([
             'theme' => __DIR__ . '/../data/theme',
@@ -256,7 +256,7 @@ class TypesetterTest extends TestCase
     public function testNoContentFilesThrowsException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('No content files found in ' . __DIR__ . '/../data/theme');
+        $this->expectExceptionMessageIs('No content files found in ' . __DIR__ . '/../data/theme');
 
         (new Typesetter())->generate(new Config([
             'theme' => __DIR__ . '/../data/theme',
@@ -278,7 +278,7 @@ class TypesetterTest extends TestCase
             }
 
             $this->expectException(RuntimeException::class);
-            $this->expectExceptionMessage($file);
+            $this->expectExceptionMessageIs('Unable to read ' . $file);
 
             (new Typesetter())->generate(new Config([
                 'theme' => __DIR__ . '/../data/theme',
@@ -408,6 +408,93 @@ class TypesetterTest extends TestCase
 
         self::assertStringContainsString('(Foot 3)', $result);
         self::assertStringContainsString('(Foot 4)', $result);
+    }
+
+    public function testCustomFontIsEmbedded(): void
+    {
+        $fontDir = sys_get_temp_dir() . '/typesetter-fonts-' . uniqid();
+        mkdir($fontDir);
+        copy(__DIR__ . '/../../vendor/mpdf/mpdf/ttfonts/DejaVuSansMono.ttf', $fontDir . '/custom.ttf');
+        $useCustomFont = new class extends Observer {
+            public function pdfInitialized(Mpdf $mpdf): void
+            {
+                $mpdf->WriteHTML('<style>body, h1 { font-family: customfont }</style>');
+            }
+        };
+
+        try {
+            $withoutFont = (new Typesetter())->generate(new Config([
+                'theme' => __DIR__ . '/../data/bare-theme',
+                'content' => __DIR__ . '/../data/content',
+                'observers' => [$useCustomFont],
+            ]));
+            $withFont = (new Typesetter())->generate(new Config([
+                'theme' => __DIR__ . '/../data/bare-theme',
+                'content' => __DIR__ . '/../data/content',
+                'mpdf' => [
+                    'fontDir' => $fontDir,
+                    'fontdata' => ['customfont' => ['R' => 'custom.ttf']],
+                ],
+                'observers' => [$useCustomFont],
+            ]));
+        } finally {
+            unlink($fontDir . '/custom.ttf');
+            rmdir($fontDir);
+        }
+
+        self::assertStringNotContainsString('DejaVuSansMono', $withoutFont);
+        self::assertStringContainsString('DejaVuSansMono', $withFont);
+    }
+
+    public function testTocAttributesRestartPageNumbering(): void
+    {
+        $result = (new Typesetter())->generate(new Config([
+            'theme' => __DIR__ . '/../data/bare-theme',
+            'content' => __DIR__ . '/../data/content',
+            'footer' => 'Foot {PAGENO}',
+            'toc-attributes' => ['resetpagenum' => 1],
+            'observers' => [
+                new class extends Observer {
+                    public function pdfInitialized(Mpdf $mpdf): void
+                    {
+                        $mpdf->SetCompression(false);
+                        $mpdf->WriteHTML('<style>footer { font-family: chelvetica }</style>');
+                    }
+
+                    public function chapterParsed(Chapter $chapter): void
+                    {
+                        if (! $chapter->isFirstChapter()) {
+                            $chapter->setHtml('<pagebreak>' . $chapter->getHtml());
+                        }
+                    }
+                },
+            ],
+        ]));
+
+        self::assertStringContainsString('(Foot 1)', $result);
+        self::assertStringContainsString('(Foot 2)', $result);
+        self::assertStringNotContainsString('(Foot 3)', $result);
+    }
+
+    public function testTocAttributesOverrideTheLibraryAttributes(): void
+    {
+        $result = (new Typesetter())->generate(new Config([
+            'theme' => __DIR__ . '/../data/bare-theme',
+            'content' => __DIR__ . '/../data/content',
+            'toc-attributes' => ['toc-preHTML' => '<h1>Custom & "quoted"</h1>'],
+            'observers' => [
+                new class extends Observer {
+                    public function pdfInitialized(Mpdf $mpdf): void
+                    {
+                        $mpdf->SetCompression(false);
+                        $mpdf->WriteHTML('<style>h1 { font-family: chelvetica }</style>');
+                    }
+                },
+            ],
+        ]));
+
+        self::assertStringContainsString('(Custom & "quoted")', $result);
+        self::assertStringNotContainsString('(Table of Contents)', $result);
     }
 
     /** @param list<string> $log */

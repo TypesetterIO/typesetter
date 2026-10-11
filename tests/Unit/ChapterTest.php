@@ -31,7 +31,7 @@ class ChapterTest extends TestCase
     public function testScalarFrontMatterThrowsException(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Front matter must be a YAML mapping');
+        $this->expectExceptionMessageIs('Front matter must be a YAML mapping');
 
         (new Chapter(new RenderedContentWithFrontMatter(new Document(), '<p>x</p>', 'hello'), 1, 1))->getMetaData();
     }
@@ -39,7 +39,7 @@ class ChapterTest extends TestCase
     public function testSequenceFrontMatterThrowsException(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Front matter must be a YAML mapping');
+        $this->expectExceptionMessageIs('Front matter must be a YAML mapping');
 
         (new Chapter(new RenderedContentWithFrontMatter(new Document(), '<p>x</p>', ['a', 'b']), 1, 1))->getMetaData();
     }

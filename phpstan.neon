@@ -9,3 +9,4 @@ parameters:
 
     stubFiles:
         - stubs/Mpdf.stub
+        - stubs/MpdfConfig.stub
