@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Observers;
 
+use League\CommonMark\Node\Block\Document;
 use League\CommonMark\Output\RenderedContent;
 use Tests\Fixtures\HtmlDocumentObserver;
 use Tests\TestCase;
@@ -13,7 +14,7 @@ class ObserverTest extends TestCase
 {
     public function testGetHtmlDocumentNonAsciiCharactersSurvive(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 1);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 1, 1);
         $chapter->setHtml('<p>café €100 — 日本語 🎉</p><p title="naïve">two</p>');
 
         $document = (new HtmlDocumentObserver())->document($chapter);
@@ -24,7 +25,7 @@ class ObserverTest extends TestCase
     public function testRoundTripKeepsBooleanAttributeValues(): void
     {
         $html = "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> done</li>\n</ul>\n";
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 1);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 1, 1);
         $chapter->setHtml($html);
 
         $observer = new HtmlDocumentObserver();

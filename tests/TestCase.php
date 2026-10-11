@@ -4,4 +4,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
-abstract class TestCase extends \PHPUnit\Framework\TestCase {}
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+abstract class TestCase extends \PHPUnit\Framework\TestCase
+{
+    use MockeryPHPUnitIntegration;
+}

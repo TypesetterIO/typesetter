@@ -23,7 +23,7 @@ class ChapterTest extends TestCase
 
     public function testGetMetaDataIsEmptyWithoutFrontMatter(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 1);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 1, 1);
 
         self::assertSame([], $chapter->getMetaData());
     }
@@ -53,7 +53,7 @@ class ChapterTest extends TestCase
 
     public function testSetHtmlAcceptsStringable(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 1);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 1, 1);
         $chapter->setHtml(new class implements Stringable {
             public function __toString(): string
             {
@@ -66,7 +66,7 @@ class ChapterTest extends TestCase
 
     public function testSingleChapterIsFirstAndLast(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 1);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 1, 1);
 
         self::assertSame(1, $chapter->getChapterNumber());
         self::assertSame(1, $chapter->getTotalChapters());

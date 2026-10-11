@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Observers;
 
+use League\CommonMark\Node\Block\Document;
 use League\CommonMark\Output\RenderedContent;
 use Tests\TestCase;
 use Typesetterio\Typesetter\Chapter;
@@ -13,7 +14,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 {
     public function testNothingHappensWhenFirstChapterByDefault(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 1, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
         $observer = new FirstElementInChapterCssClass();
@@ -24,7 +25,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 
     public function testClassAddedToFirstWhenSaid(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 1, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 1, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
         $observer = new FirstElementInChapterCssClass(skipFirst: false);
@@ -35,7 +36,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 
     public function testClassIsMerged(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 2, 2);
         $chapter->setHtml('<p class="already-here">one</p><p>two</p>');
 
         $observer = new FirstElementInChapterCssClass();
@@ -46,7 +47,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 
     public function testClassChangedRenders(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 2, 2);
         $chapter->setHtml('<p>one</p><p>two</p>');
 
         $observer = new FirstElementInChapterCssClass(class: 'special');
@@ -57,7 +58,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 
     public function testEmptyChapterStaysEmpty(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 2, 2);
         $chapter->setHtml('');
 
         $observer = new FirstElementInChapterCssClass();
@@ -68,7 +69,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 
     public function testClassAddedToWrappingElement(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 2, 2);
         $chapter->setHtml('<section><h1>x</h1></section><p>y</p>');
 
         $observer = new FirstElementInChapterCssClass();
@@ -79,7 +80,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 
     public function testCommentOnlyChapterIsUnchanged(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 2, 2);
         $chapter->setHtml('<!-- todo -->');
 
         $observer = new FirstElementInChapterCssClass();
@@ -90,7 +91,7 @@ class FirstElementInChapterCssClassTest extends TestCase
 
     public function testTaskListCheckedStateSurvives(): void
     {
-        $chapter = new Chapter($this->createStub(RenderedContent::class), 2, 2);
+        $chapter = new Chapter(new RenderedContent(new Document(), ''), 2, 2);
         $chapter->setHtml("<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> done</li>\n<li><input disabled=\"\" type=\"checkbox\"> todo</li>\n</ul>\n");
 
         $observer = new FirstElementInChapterCssClass();
