@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `toc-levels` config key: the list of heading tags that build the TOC and the PDF outline, default `['H1', 'H2']`.
 - `toc-attributes` config key: attributes merged over the library's `<tocpagebreak>` tag, for example `['resetpagenum' => 1]` to restart page numbering after the TOC.
-- `mpdf` config key: options for the mPDF constructor, merged over the library's defaults. `fontDir` and `fontdata` extend mPDF's bundled fonts instead of replacing them, so a book can add its own TTF fonts..
+- `mpdf` config key: options for the mPDF constructor, merged over the library's defaults. `fontDir` and `fontdata` extend mPDF's bundled fonts instead of replacing them, so a book can add its own TTF fonts.
 - `Observer::setHtmlFromDocument()` writes a `Dom\HTMLDocument` body back to the chapter.
 
 ### Changed
