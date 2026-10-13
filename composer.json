@@ -45,6 +45,7 @@
         "sort-packages": true
     },
     "scripts": {
+        "zizmor": "zizmor --quiet .",
         "phpcs": "php-cs-fixer check --show-progress=none",
         "phpcs-fix": "php-cs-fixer fix --show-progress=none",
         "phpstan": "phpstan",
@@ -54,12 +55,14 @@
             "phpunit --coverage-html coverage --path-coverage"
         ],
         "ci": [
+            "@zizmor",
             "@phpcs",
             "@phpstan",
             "@test"
         ]
     },
     "scripts-descriptions": {
+        "zizmor": "Audit the GitHub Actions workflows with zizmor",
         "phpcs": "Check coding standard with PHP CS Fixer",
         "phpcs-fix": "Fix coding standard with PHP CS Fixer",
         "phpstan": "Run PHPStan",

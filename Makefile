@@ -4,13 +4,16 @@ WORKFLOW = .github/workflows/ci.yml
 ACT_IMAGE = ubuntu-latest=shivammathur/node:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help install phpcs phpcs-fix phpstan test coverage ci demo act
+.PHONY: help install zizmor phpcs phpcs-fix phpstan test coverage ci demo act
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-10s %s\n", $$1, $$2}'
 
 install: ## composer install
 	$(COMPOSER) install --no-progress --no-ansi --prefer-dist
+
+zizmor: ## zizmor on the GitHub Actions workflows
+	zizmor --quiet .
 
 phpcs: ## PHP CS Fixer check
 	$(PHP) vendor/bin/php-cs-fixer check --show-progress=none
@@ -27,7 +30,7 @@ test: ## PHPUnit
 coverage: ## HTML coverage report in coverage/ (needs Xdebug)
 	XDEBUG_MODE=coverage $(PHP) vendor/bin/phpunit --coverage-html coverage --path-coverage
 
-ci: phpcs phpstan test ## phpcs, phpstan, test in order
+ci: zizmor phpcs phpstan test ## zizmor, phpcs, phpstan, test in order
 
 demo: ## Generate demo/output.pdf
 	$(PHP) demo/run.php
